@@ -53,3 +53,22 @@ export function getStatusLabel(status: string): string {
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ')
 }
+
+export function getErrorMessage(err: any): string {
+  const message = err?.response?.data?.message
+
+  if (typeof message === 'string') {
+    return message
+  }
+
+  if (message && typeof message === 'object') {
+    const firstKey = Object.keys(message)[0]
+    const firstError = message[firstKey]
+    if (Array.isArray(firstError)) {
+      return `${firstKey}: ${firstError[0]}`
+    }
+    return JSON.stringify(message)
+  }
+
+  return 'Something went wrong. Please try again.'
+}

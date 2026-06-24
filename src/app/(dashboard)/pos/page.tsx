@@ -1,21 +1,20 @@
+"use client";
 
-'use client'
-
-import { useState } from 'react'
-import Topbar from '@/components/shared/Topbar'
-import ProductSearch from '@/components/pos/ProductSearch'
-import CartPanel from '@/components/pos/CartPanel'
-import CheckoutModal from '@/components/pos/CheckoutModal'
-import ReceiptModal from '@/components/pos/ReceiptModal'
-import { useCartStore } from '@/store/cartStore'
-import { useAuthStore } from '@/store/authStore'
-import { Sale } from '@/types'
+import { useState } from "react";
+import Topbar from "@/components/shared/Topbar";
+import ProductSearch from "@/components/pos/ProductSearch";
+import CartPanel from "@/components/pos/CartPanel";
+import CheckoutModal from "@/components/pos/CheckoutModal";
+import ReceiptModal from "@/components/pos/ReceiptModal";
+import { useCartStore } from "@/store/cartStore";
+import { useAuthStore } from "@/store/authStore";
+import { Sale } from "@/types";
 
 export default function POSPage() {
-  const items = useCartStore((state) => state.items)
-  const member = useAuthStore((state) => state.member)
-  const [showCheckout, setShowCheckout] = useState(false)
-  const [completedSale, setCompletedSale] = useState<Sale | null>(null)
+  const items = useCartStore((state) => state.items);
+  const member = useAuthStore((state) => state.member);
+  const [showCheckout, setShowCheckout] = useState(false);
+  const [completedSale, setCompletedSale] = useState<Sale | null>(null);
 
   return (
     <>
@@ -40,9 +39,7 @@ export default function POSPage() {
           <button
             onClick={() => setShowCheckout(true)}
             disabled={items.length === 0}
-            className="w-full bg-emerald-600 text-white py-3.5 rounded-xl text-sm font-semibold
-                       hover:bg-emerald-700 transition-colors disabled:opacity-50
-                       disabled:cursor-not-allowed"
+            className="not-even:w-full bg-emerald-600 text-white py-3.5 rounded-xl text-sm font-semibold hover:bg-emerald-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Proceed to Checkout
           </button>
@@ -53,8 +50,8 @@ export default function POSPage() {
         <CheckoutModal
           onClose={() => setShowCheckout(false)}
           onSuccess={(sale) => {
-            setShowCheckout(false)
-            setCompletedSale(sale)
+            setShowCheckout(false);
+            setCompletedSale(sale);
           }}
         />
       )}
@@ -66,5 +63,5 @@ export default function POSPage() {
         />
       )}
     </>
-  )
+  );
 }

@@ -4,7 +4,7 @@
 import { useState } from 'react'
 import { X, Banknote, Smartphone, FileText } from 'lucide-react'
 import { useCartStore } from '@/store/cartStore'
-import { formatCurrency } from '@/lib/utils'
+import { formatCurrency, getErrorMessage } from '@/lib/utils'
 import { createSale } from '@/lib/sales'
 import { useAuthStore } from '@/store/authStore'
 import toast from 'react-hot-toast'
@@ -64,7 +64,7 @@ export default function CheckoutModal({
       clearCart()
       onSuccess(sale)
     } catch (err: any) {
-      toast.error(err.response?.data?.message || 'Failed to complete sale')
+      toast.error(getErrorMessage(err))
     } finally {
       setLoading(false)
     }
