@@ -2,6 +2,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useEffectiveStoreId } from '@/lib/useEffectiveStoreId'
 import { X, Banknote, Smartphone, FileText } from 'lucide-react'
 import { useCartStore } from '@/store/cartStore'
 import { formatCurrency, getErrorMessage } from '@/lib/utils'
@@ -23,6 +24,7 @@ export default function CheckoutModal({
   onClose: () => void
   onSuccess: (sale: Sale) => void
 }) {
+  const storeId = useEffectiveStoreId()
   const items = useCartStore((state) => state.items)
   const discount = useCartStore((state) => state.discount)
   const clientId = useCartStore((state) => state.clientId)
@@ -41,15 +43,15 @@ export default function CheckoutModal({
   const change = Math.max(paid - total, 0)
 
   async function handleConfirm() {
-    if (!member?.store_id) {
-      toast.error('No store assigned to your account')
+    if (!storeId) {
+      toast.error('Please select a specific store before completing a sale')
       return
     }
 
     setLoading(true)
     try {
       const sale = await createSale({
-        store_id: member.store_id,
+        store_id: storeId,
         client_id: clientId,
         paid,
         discount,

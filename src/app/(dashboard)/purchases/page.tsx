@@ -16,9 +16,11 @@ import {
 import { formatCurrency, formatDateShort, getErrorMessage, getStatusColor, getStatusLabel } from '@/lib/utils'
 import { Purchase } from '@/types'
 import { useAuthStore } from '@/store/authStore'
+import { useEffectiveStoreId } from '@/lib/useEffectiveStoreId'
 import toast from 'react-hot-toast'
 
 export default function PurchasesPage() {
+  const storeId = useEffectiveStoreId()
   const member = useAuthStore((state) => state.member)
   const [purchases, setPurchases] = useState<Purchase[]>([])
   const [summary, setSummary] = useState<PurchaseSummary | null>(null)
@@ -30,8 +32,8 @@ export default function PurchasesPage() {
     setLoading(true)
     try {
       const [purchasesData, summaryData] = await Promise.all([
-        getPurchases(member?.store_id ?? undefined),
-        getPurchaseSummary(member?.store_id ?? undefined),
+        getPurchases(storeId),
+        getPurchaseSummary(storeId),
       ])
       setPurchases(purchasesData)
       setSummary(summaryData)
@@ -44,7 +46,7 @@ export default function PurchasesPage() {
 
   useEffect(() => {
     loadData()
-  }, [])
+  }, [storeId])
 
   async function handleReceive(id: number) {
     setActionLoading(id)
@@ -120,6 +122,9 @@ export default function PurchasesPage() {
                   >
                     {getStatusLabel(p.status)}
                   </span>
+                  <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded border ${getStatusColor(p.payment_status)}`}>
+                    {getStatusLabel(p.payment_status)}
+                  </span>
                 </div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs text-gray-500 mb-3">
@@ -141,7 +146,7 @@ export default function PurchasesPage() {
                   </div>
                 </div>
 
-                {p.status !== 'received' && p.status !== 'cancelled' && (
+                {p.status === 'pending' && (
                   <div className="flex gap-2 pt-3 border-t border-gray-50">
                     <button
                       onClick={() => handleReceive(p.id)}

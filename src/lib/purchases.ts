@@ -6,7 +6,6 @@ export interface PurchaseSummary {
   total: number
   pending: number
   received: number
-  partially_received: number
   cancelled: number
 }
 
