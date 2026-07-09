@@ -125,7 +125,8 @@ export interface Purchase {
   total: number
   paid: number
   balance: number
-  status: 'pending' | 'received' | 'partially_received' | 'cancelled'
+  payment_status: 'pending' | 'partially_paid' | 'paid'
+  status: 'pending' | 'received' | 'cancelled'
   date: string
   created_at: string
   items: PurchaseItem[]

@@ -26,10 +26,12 @@ import {
 } from '@/lib/analytics'
 import { DashboardStats } from '@/types'
 import { formatCurrency } from '@/lib/utils'
+import { useEffectiveStoreId } from '@/lib/useEffectiveStoreId'
 
 const now = new Date()
 
 export default function DashboardPage() {
+  const storeId = useEffectiveStoreId()
   const [stats, setStats] = useState<DashboardStats | null>(null)
   const [yearlyData, setYearlyData] = useState<YearlyStat[]>([])
   const [monthlyData, setMonthlyData] = useState<MonthlyStat[]>([])
@@ -40,18 +42,18 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    getDashboardStats().then(setStats).catch(() => {})
-    getTopProducts(undefined, 5).then(setTopProducts).catch(() => {})
+    getDashboardStats(storeId).then(setStats).catch(() => {})
+    getTopProducts(storeId, 5).then(setTopProducts).catch(() => {})
     setLoading(false)
-  }, [])
+  }, [storeId])
 
   useEffect(() => {
-    getYearlyStats(year).then(setYearlyData).catch(() => {})
-  }, [year])
+    getYearlyStats(year, storeId).then(setYearlyData).catch(() => {})
+  }, [year, storeId])
 
   useEffect(() => {
-    getMonthlyStats(monthYear, month).then(setMonthlyData).catch(() => {})
-  }, [month, monthYear])
+    getMonthlyStats(monthYear, month, storeId).then(setMonthlyData).catch(() => {})
+  }, [month, monthYear, storeId])
 
   return (
     <>

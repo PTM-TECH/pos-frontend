@@ -11,9 +11,11 @@ import ConfirmDialog from '@/components/ui/ConfirmDialog'
 import { getProducts, deleteProduct, getCategories } from '@/lib/inventory'
 import { Product, Category } from '@/types'
 import { useAuthStore } from '@/store/authStore'
+import { useEffectiveStoreId } from '@/lib/useEffectiveStoreId'
 import toast from 'react-hot-toast'
 
 export default function InventoryPage() {
+  const storeId = useEffectiveStoreId()
   const member = useAuthStore((state) => state.member)
   const [products, setProducts] = useState<Product[]>([])
   const [categories, setCategories] = useState<Category[]>([])
@@ -30,7 +32,7 @@ export default function InventoryPage() {
     setLoading(true)
     try {
       const [productsData, categoriesData] = await Promise.all([
-        getProducts(member?.store_id ?? undefined),
+        getProducts(storeId),
         getCategories(),
       ])
       setProducts(productsData)
@@ -44,7 +46,7 @@ export default function InventoryPage() {
 
   useEffect(() => {
     loadData()
-  }, [])
+  }, [storeId])
 
   const filtered = products.filter((p) =>
     p.name.toLowerCase().includes(query.toLowerCase())

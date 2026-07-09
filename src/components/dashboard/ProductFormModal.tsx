@@ -8,6 +8,7 @@ import { createProduct, updateProduct } from '@/lib/inventory'
 import { useAuthStore } from '@/store/authStore'
 import toast from 'react-hot-toast'
 import { getErrorMessage } from '@/lib/utils'
+import { useEffectiveStoreId } from '@/lib/useEffectiveStoreId'
 
 export default function ProductFormModal({
   product,
@@ -20,9 +21,9 @@ export default function ProductFormModal({
   onClose: () => void
   onSaved: () => void
 }) {
+  const storeId = useEffectiveStoreId()
   const member = useAuthStore((state) => state.member)
   const isEdit = !!product
-
   const [name, setName] = useState(product?.name ?? '')
   const [description, setDescription] = useState(product?.description ?? '')
   const [code, setCode] = useState(product?.code ?? '')
@@ -57,12 +58,11 @@ export default function ProductFormModal({
         code,
         unit_price: unitPrice,
         unit,
-        quantity,
       })
       toast.success('Product updated successfully')
       } else {
         await createProduct({
-        store_id: member?.store_id ?? 1,
+        store_id: storeId ?? 1,
         category_id: categoryId === '' ? null : categoryId,
         name,
         description,
@@ -186,6 +186,7 @@ export default function ProductFormModal({
               min={0}
               value={quantity}
               onChange={(e) => setQuantity(Number(e.target.value))}
+              disabled={isEdit}
               className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm
                          focus:outline-none focus:ring-2 focus:ring-emerald-500"
             />

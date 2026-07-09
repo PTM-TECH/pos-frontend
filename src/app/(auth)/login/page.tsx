@@ -1,26 +1,27 @@
-// src/app/(auth)/login/page.tsx
+
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect, Suspense } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Eye, EyeOff, LayoutGrid } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { loginRequest } from '@/lib/auth'
 import { useAuthStore } from '@/store/authStore'
+import Link from 'next/link'
 
-export default function LoginPage() {
-  const router = useRouter()
-  const setAuth = useAuthStore((state) => state.setAuth)
+function LoginForm() {
+  const router       = useRouter()
+  const searchParams = useSearchParams()
+  const setAuth      = useAuthStore((state) => state.setAuth)
 
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [email,        setEmail]        = useState(searchParams.get('email') ?? '')
+  const [password,     setPassword]     = useState('')
   const [showPassword, setShowPassword] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [loading,      setLoading]      = useState(false)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
-
     try {
       const data = await loginRequest({ email, password })
       setAuth(data.token, data.member)
@@ -44,9 +45,11 @@ export default function LoginPage() {
   return (
     <div className="w-full max-w-sm">
       <div className="flex flex-col items-center mb-8">
-        <div className="w-12 h-12 rounded-xl bg-emerald-600 flex items-center justify-center mb-4">
-          <LayoutGrid className="w-6 h-6 text-white" />
-        </div>
+        <Link href="/" className="mb-4">
+          <div className="w-12 h-12 rounded-xl bg-emerald-600 flex items-center justify-center">
+            <LayoutGrid className="w-6 h-6 text-white" />
+          </div>
+        </Link>
         <h1 className="text-xl font-semibold text-gray-900">
           Sign in to your account
         </h1>
@@ -69,7 +72,7 @@ export default function LoginPage() {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="pos@gmail.com"
+            placeholder="you@company.com"
             className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm
                        focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent
                        placeholder:text-gray-400"
@@ -90,7 +93,7 @@ export default function LoginPage() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="**********"
+              placeholder="••••••••"
               className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm
                          focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent
                          placeholder:text-gray-400 pr-10"
@@ -100,11 +103,10 @@ export default function LoginPage() {
               onClick={() => setShowPassword(!showPassword)}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
             >
-              {showPassword ? (
-                <EyeOff className="w-4 h-4" />
-              ) : (
-                <Eye className="w-4 h-4" />
-              )}
+              {showPassword
+                ? <EyeOff className="w-4 h-4" />
+                : <Eye className="w-4 h-4" />
+              }
             </button>
           </div>
         </div>
@@ -120,9 +122,24 @@ export default function LoginPage() {
         </button>
       </form>
 
-      <p className="text-center text-xs text-gray-400 mt-8">
+      <p className="text-center text-xs text-gray-400 mt-6">
+        Don&apos;t have an account?{' '}
+        <Link href="/register" className="text-emerald-600 hover:text-emerald-700 font-medium">
+          Start free trial
+        </Link>
+      </p>
+
+      <p className="text-center text-xs text-gray-400 mt-2">
         POS System — Secure Business Management
       </p>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginForm />
+    </Suspense>
   )
 }

@@ -9,6 +9,7 @@ import { getVendors } from "@/lib/vendors";
 import { getProducts } from "@/lib/inventory";
 import { getErrorMessage, formatCurrency } from "@/lib/utils";
 import { useAuthStore } from "@/store/authStore";
+import { useEffectiveStoreId } from "@/lib/useEffectiveStoreId";
 import toast from "react-hot-toast";
 
 interface ItemRow {
@@ -24,6 +25,7 @@ export default function PurchaseFormModal({
   onClose: () => void;
   onSaved: () => void;
 }) {
+  const storeId = useEffectiveStoreId()
   const member = useAuthStore((state) => state.member);
   const [vendors, setVendors] = useState<Vendor[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
@@ -83,7 +85,7 @@ export default function PurchaseFormModal({
     setLoading(true);
     try {
       await createPurchase({
-        store_id: member?.store_id ?? 1,
+        store_id: storeId ?? 1,
         vendor_id: vendorId === "" ? null : vendorId,
         title,
         paid,

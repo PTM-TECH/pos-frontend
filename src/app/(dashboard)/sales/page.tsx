@@ -11,9 +11,11 @@ import { getSales } from '@/lib/sales'
 import { formatCurrency, formatDate, getStatusColor, getStatusLabel } from '@/lib/utils'
 import { Sale } from '@/types'
 import { useAuthStore } from '@/store/authStore'
+import { useEffectiveStoreId } from '@/lib/useEffectiveStoreId'
 import toast from 'react-hot-toast'
 
 export default function SalesPage() {
+  const storeId = useEffectiveStoreId()
   const member = useAuthStore((state) => state.member)
   const [sales, setSales] = useState<Sale[]>([])
   const [query, setQuery] = useState('')
@@ -23,7 +25,7 @@ export default function SalesPage() {
   async function loadData() {
     setLoading(true)
     try {
-      setSales(await getSales(member?.store_id ?? undefined))
+      setSales(await getSales(storeId))
     } catch {
       toast.error('Failed to load sales')
     } finally {
@@ -33,7 +35,7 @@ export default function SalesPage() {
 
   useEffect(() => {
     loadData()
-  }, [])
+  }, [storeId])
 
   const filtered = sales.filter((s) =>
     (s.client ?? 'walk-in').toLowerCase().includes(query.toLowerCase()) ||

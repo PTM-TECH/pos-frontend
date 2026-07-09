@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useEffectiveStoreId } from '@/lib/useEffectiveStoreId'
 import Topbar from "@/components/shared/Topbar";
 import ProductSearch from "@/components/pos/ProductSearch";
 import CartPanel from "@/components/pos/CartPanel";
@@ -11,6 +12,7 @@ import { useAuthStore } from "@/store/authStore";
 import { Sale } from "@/types";
 
 export default function POSPage() {
+  const storeId = useEffectiveStoreId()
   const items = useCartStore((state) => state.items);
   const member = useAuthStore((state) => state.member);
   const [showCheckout, setShowCheckout] = useState(false);
@@ -22,7 +24,7 @@ export default function POSPage() {
 
       <div className="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6 h-[calc(100vh-4rem)]">
         <div className="lg:col-span-2 space-y-4">
-          <ProductSearch storeId={member?.store_id ?? undefined} />
+          <ProductSearch storeId={storeId} />
 
           <div className="bg-white rounded-xl border border-gray-200 p-5">
             <p className="text-sm text-gray-500">
