@@ -61,7 +61,7 @@ const PLANS = [
   },
   {
     name: 'Lifetime',
-    price: 30000,
+    price: 40000,
     billing: 'one-time payment',
     description: 'Pay once, use forever. Everything in Enterprise included.',
     features: [
