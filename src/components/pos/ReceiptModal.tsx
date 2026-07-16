@@ -56,7 +56,7 @@ export default function ReceiptModal({
 
         <div ref={receiptRef} className="p-6 font-mono text-[13px] text-gray-800">
           <div className="center">
-            <p className="bold text-base">POS SYSTEM</p>
+            <p className="bold text-base">SALES RECEIPT</p>
             <p>{sale.store}</p>
             <p>{formatDate(sale.created_at)}</p>
           </div>
