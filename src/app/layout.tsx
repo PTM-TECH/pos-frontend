@@ -9,7 +9,7 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'POS System',
+  title: 'BoraPOS System',
   description: 'Point of Sale and Inventory Management System',
 }
 
