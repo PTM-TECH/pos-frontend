@@ -1,6 +1,6 @@
 
 import Link from 'next/link'
-import { LayoutGrid } from 'lucide-react'
+
 
 export default function Footer() {
   return (
@@ -9,10 +9,8 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2 mb-3">
-              <div className="w-7 h-7 rounded-lg bg-emerald-500 flex items-center justify-center">
-                <LayoutGrid className="w-3.5 h-3.5 text-white" />
-              </div>
-              <span className="font-bold text-white text-sm">BoraPOS</span>
+              <img src="/logo.png" alt="PapoPOS" className="w-7 h-7 rounded-lg object-contain" />
+              <span className="font-bold text-white text-sm">PapoPOS</span>
             </div>
             <p className="text-xs text-gray-500 leading-relaxed">
               The modern POS system built for Kenyan businesses.
@@ -47,7 +45,7 @@ export default function Footer() {
 
         <div className="border-t border-white/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-gray-600">
-            © {new Date().getFullYear()} BoraPOS. All rights reserved.
+            © {new Date().getFullYear()} PapoPOS. All rights reserved.
           </p>
           <p className="text-xs text-gray-600">
             Fast. Easy. Secure.

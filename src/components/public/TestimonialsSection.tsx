@@ -4,7 +4,7 @@ const TESTIMONIALS = [
     name: 'Sarah Wanjiku',
     role: 'Owner, Westside Boutique',
     location: 'Nairobi',
-    text: "BoraPOS completely transformed how I run my boutique. I can track sales across my two branches from my phone. The M-Pesa integration makes checkout so fast.",
+    text: "PapoPOS completely transformed how I run my boutique. I can track sales across my two branches from my phone. The M-Pesa integration makes checkout so fast.",
     avatar: 'SW',
   },
   {
@@ -35,7 +35,7 @@ export default function TestimonialsSection() {
             Trusted by businesses across Kenya
           </h2>
           <p className="text-gray-400">
-            See what business owners are saying about BoraPOS.
+            See what business owners are saying about PapoPOS.
           </p>
         </div>
 

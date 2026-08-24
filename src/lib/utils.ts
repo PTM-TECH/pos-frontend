@@ -1,5 +1,10 @@
 // src/lib/utils.ts
 
+function toUUtcDate(dateString: string): Date {
+  const hasTimezone = /Z$|[+-]\d{2}:\d{2}$/.test(dateString)
+  return new Date(hasTimezone ? dateString : `${dateString}Z`)
+}
+
 export function formatCurrency(amount: number): string {
   return `KES ${amount.toLocaleString('en-KE', {
     minimumFractionDigits: 2,
@@ -8,7 +13,7 @@ export function formatCurrency(amount: number): string {
 }
 
 export function formatDate(dateString: string): string {
-  return new Date(dateString).toLocaleString('en-KE', {
+  return toUUtcDate(dateString).toLocaleString('en-KE', {
     timeZone: 'Africa/Nairobi',
     day: '2-digit',
     month: 'short',
@@ -19,7 +24,7 @@ export function formatDate(dateString: string): string {
 }
 
 export function formatDateShort(dateString: string): string {
-  return new Date(dateString).toLocaleDateString('en-KE', {
+  return toUUtcDate(dateString).toLocaleDateString('en-KE', {
     timeZone: 'Africa/Nairobi',
     day: '2-digit',
     month: 'short',
@@ -71,4 +76,11 @@ export function getErrorMessage(err: any): string {
   }
 
   return 'Something went wrong. Please try again.'
+}
+
+export function getAssetUrl(path: string | null | undefined): string | null {
+  if (!path) return null
+  if (path.startsWith('http')) return path
+  const base = (process.env.NEXT_PUBLIC_API_URL ?? '').replace(/\/api\/?$/, '')
+  return `${base}${path}`
 }

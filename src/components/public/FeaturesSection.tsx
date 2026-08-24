@@ -81,7 +81,7 @@ export default function FeaturesSection() {
             Everything you need to run your business
           </h2>
           <p className="text-gray-400 max-w-xl mx-auto">
-            From the first sale of the day to your end-of-day report — BoraPOS has every part of your operation covered.
+            From the first sale of the day to your end-of-day report; PapoPOS has every part of your operation covered.
           </p>
         </div>
 

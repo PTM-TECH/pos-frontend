@@ -1,5 +1,5 @@
 
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import { Toaster } from 'react-hot-toast'
 import './globals.css'
@@ -9,8 +9,16 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'BoraPOS System',
+  title: 'PapoPOS System',
   description: 'Point of Sale and Inventory Management System',
+  manifest: '/manifest.json',
+  icons: {
+    icon: '/favicon.ico',
+    apple: '/apple-touch-icon.png',
+  },
+}
+export const viewport: Viewport = {
+  themeColor: '#059669',
 }
 
 export default function RootLayout({

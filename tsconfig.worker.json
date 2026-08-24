@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "lib": ["esnext", "webworker"],
+    "skipLibCheck": true,
+    "strict": true,
+    "types": []
+  },
+  "include": ["src/service-worker/sw.ts"]
+}

@@ -1,26 +1,32 @@
+"use client";
 
-'use client'
+import { useRef, useState } from "react";
+import toast from "react-hot-toast";
+import { X, Printer, RotateCcw } from "lucide-react";
+import { Sale, SaleItem } from "@/types";
+import ReturnItemModal from "./ReturnItemModal";
 
-import { useRef } from 'react'
-import { X, Printer } from 'lucide-react'
-import { Sale } from '@/types'
-import { formatCurrency, formatDate } from '@/lib/utils'
+import { formatCurrency, formatDate, getAssetUrl } from "@/lib/utils";
 
 export default function ReceiptModal({
   sale,
   onClose,
 }: {
-  sale: Sale
-  onClose: () => void
+  sale: Sale;
+  onClose: () => void;
 }) {
-  const receiptRef = useRef<HTMLDivElement>(null)
+  const receiptRef = useRef<HTMLDivElement>(null);
+  const [returningItem, setReturningItem] = useState<SaleItem | null>(null);
 
   function handlePrint() {
-    const printContent = receiptRef.current?.innerHTML
-    if (!printContent) return
+    const printContent = receiptRef.current?.innerHTML;
+    if (!printContent) return;
 
-    const printWindow = window.open('', '_blank')
-    if (!printWindow) return
+    const printWindow = window.open("", "_blank");
+    if (!printWindow) {
+      toast.error("Please allow pop-ups to print the receipt");
+      return;
+    }
 
     printWindow.document.write(`
       <html>
@@ -37,11 +43,15 @@ export default function ReceiptModal({
         </head>
         <body>${printContent}</body>
       </html>
-    `)
-    printWindow.document.close()
-    printWindow.focus()
-    printWindow.print()
-    printWindow.close()
+    `);
+    printWindow.document.close();
+    printWindow.onload = () => {
+      printWindow.focus();
+      printWindow.print();
+    };
+    printWindow.onafterprint = () => {
+      printWindow.close();
+    };
   }
 
   return (
@@ -49,15 +59,35 @@ export default function ReceiptModal({
       <div className="bg-white rounded-2xl w-full max-w-sm max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
           <h2 className="text-base font-semibold text-gray-900">Receipt</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600"
+          >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <div ref={receiptRef} className="p-6 font-mono text-[13px] text-gray-800">
+        <div
+          ref={receiptRef}
+          className="p-6 font-mono text-[13px] text-gray-800"
+        >
           <div className="center">
-            <p className="bold text-base">SALES RECEIPT</p>
+            {sale.business_logo && (
+              <img
+                src={getAssetUrl(sale.business_logo) ?? ""}
+                alt={sale.business_name ?? "Logo"}
+                style={{
+                  maxHeight: 48,
+                  margin: "0 auto 8px",
+                  display: "block",
+                }}
+              />
+            )}
+            <p className="bold text-base">
+              {sale.business_name ?? "SALES RECEIPT"}
+            </p>
             <p>{sale.store}</p>
+            {sale.business_phone && <p>{sale.business_phone}</p>}
             <p>{formatDate(sale.created_at)}</p>
           </div>
           <hr />
@@ -66,12 +96,12 @@ export default function ReceiptModal({
             <span>{sale.id}</span>
           </div>
           <div className="row">
-            <span>Served by</span>
+            <span>Served by: </span>
             <span>{sale.member}</span>
           </div>
           <div className="row">
-            <span>Client</span>
-            <span>{sale.client ?? 'Walk-In'}</span>
+            <span>Client: </span>
+            <span>{sale.client ?? "Walk-In"}</span>
           </div>
           <hr />
           {sale.items.map((item) => (
@@ -81,42 +111,78 @@ export default function ReceiptModal({
                 <span>
                   {item.quantity} x {formatCurrency(item.unit_price)}
                 </span>
-                <span>{formatCurrency(item.subtotal)}</span>
+                <span> : {formatCurrency(item.subtotal)}</span>
               </div>
+              {item.returned_quantity > 0 && (
+                <div className="row" style={{ color: "#b91c1c" }}>
+                  <span>Returned</span>
+                  <span>{item.returned_quantity}</span>
+                </div>
+              )}
             </div>
           ))}
           <hr />
           <div className="row">
-            <span>Discount</span>
+            <span>Discount: </span>
             <span>{formatCurrency(sale.discount)}</span>
           </div>
           <div className="row bold total">
-            <span>Total</span>
+            <span>Total: </span>
             <span>{formatCurrency(sale.total)}</span>
           </div>
           <div className="row">
-            <span>Paid</span>
+            <span>Paid: </span>
             <span>{formatCurrency(sale.paid)}</span>
           </div>
           <div className="row">
-            <span>Balance</span>
+            <span>Balance: </span>
             <span>{formatCurrency(sale.balance)}</span>
           </div>
           <hr />
           <p className="center">Thank you for shopping with us!</p>
+          <div className="center" style={{ marginTop: 12, fontSize: 10, color: '#888' }}>
+            <p>Software Developed by: Pawatech Systems</p>
+            <p>Call/Whatsapp: +254795310021</p>
+          </div>
+        </div>
+
+        {/* Return actions — not part of the printable receipt above */}
+        <div className="px-6 pb-4 space-y-1.5">
+          {sale.items.map((item) => {
+            const remaining = item.quantity - (item.returned_quantity ?? 0);
+            if (remaining <= 0) return null;
+            return (
+              <button
+                key={item.id}
+                onClick={() => setReturningItem(item)}
+                className="w-full flex items-center justify-between text-xs px-3 py-2 rounded-lg
+                           border border-gray-200 text-gray-600 hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors"
+              >
+                <span>Return &quot;{item.product_name}&quot;</span>
+                <RotateCcw className="w-3.5 h-3.5" />
+              </button>
+            );
+          })}
         </div>
 
         <div className="px-6 py-4 border-t border-gray-100">
           <button
             onClick={handlePrint}
-            className="w-full flex items-center justify-center gap-2 bg-gray-900 text-white py-3
-                       rounded-xl text-sm font-medium hover:bg-gray-800 transition-colors"
+            className="w-full flex items-center justify-center gap-2 bg-gray-900 text-white py-3 rounded-xl text-sm font-medium hover:bg-gray-800 transition-colors"
           >
             <Printer className="w-4 h-4" />
             Print Receipt
           </button>
         </div>
       </div>
+
+      {returningItem && (
+        <ReturnItemModal
+          item={returningItem}
+          onClose={() => setReturningItem(null)}
+          onSaved={() => setReturningItem(null)}
+        />
+      )}
     </div>
-  )
+  );
 }

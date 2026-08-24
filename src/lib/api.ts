@@ -27,6 +27,11 @@ api.interceptors.response.use(
         window.location.href = "/login";
       }
     }
+    if (error.response?.status === 402) {
+      if (typeof window !== "undefined" && window.location.pathname !== "/billing") {
+        window.location.href = "/billing";
+      }
+    }
     return Promise.reject(error);
   },
 );

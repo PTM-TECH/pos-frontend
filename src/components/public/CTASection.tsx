@@ -10,8 +10,8 @@ export default function CTASection() {
           Ready to grow your business?
         </h2>
         <p className="text-gray-400 mb-8">
-          Join hundreds of Kenyan businesses already using BoraPOS.
-          Start your 5-day free trial — no credit card required.
+          Join hundreds of Kenyan businesses already using PapoPOS.
+          Start your 14-day free trial. No credit card required.
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           <Link

@@ -1,20 +1,35 @@
+"use client";
 
-'use client'
-
-import { Minus, Plus, Trash2, ShoppingCart } from 'lucide-react'
-import { useCartStore } from '@/store/cartStore'
-import { formatCurrency } from '@/lib/utils'
+import { useState, useRef } from "react";
+import { Minus, Plus, Trash2, ShoppingCart } from "lucide-react";
+import { useCartStore } from "@/store/cartStore";
+import { formatCurrency } from "@/lib/utils";
+import NumericKeypad from "./NumericKeypad";
 
 export default function CartPanel() {
-  const items = useCartStore((state) => state.items)
-  const discount = useCartStore((state) => state.discount)
-  const incrementItem = useCartStore((state) => state.incrementItem)
-  const decrementItem = useCartStore((state) => state.decrementItem)
-  const removeItem = useCartStore((state) => state.removeItem)
-  const setDiscount = useCartStore((state) => state.setDiscount)
-  const getSubtotal = useCartStore((state) => state.getSubtotal)
+  const items = useCartStore((state) => state.items);
+  const discount = useCartStore((state) => state.discount);
+  const incrementItem = useCartStore((state) => state.incrementItem);
+  const decrementItem = useCartStore((state) => state.decrementItem);
+  const setItemQuantity = useCartStore((state) => state.setItemQuantity)
+  const removeItem = useCartStore((state) => state.removeItem);
+  const setDiscount = useCartStore((state) => state.setDiscount);
+  const getSubtotal = useCartStore((state) => state.getSubtotal);
 
-  const subtotal = getSubtotal()
+  const subtotal = getSubtotal();
+
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editValue, setEditValue] = useState("");
+  const [showKeypadFor, setShowKeypadFor] = useState<number | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  function commitEdit(productId: number) {
+    const parsed = parseInt(editValue, 10);
+    if (!isNaN(parsed)) {
+      setItemQuantity(productId, parsed);
+    }
+    setEditingId(null);
+  }
 
   return (
     <div className="bg-white rounded-xl border border-gray-200 flex flex-col h-full">
@@ -45,11 +60,11 @@ export default function CartPanel() {
                   {item.name}
                 </p>
                 <p className="text-xs text-gray-500">
-                  {formatCurrency(item.unit_price)} / {item.unit ?? 'unit'}
+                  {formatCurrency(item.unit_price)} / {item.unit ?? "unit"}
                 </p>
               </div>
 
-              <div className="flex items-center gap-1.5 shrink-0">
+              <div className="flex items-center gap-1.5 shrink-0 relative">
                 <button
                   onClick={() => decrementItem(item.product_id)}
                   className="w-6 h-6 rounded-md border border-gray-200 flex items-center justify-center
@@ -57,9 +72,38 @@ export default function CartPanel() {
                 >
                   <Minus className="w-3 h-3" />
                 </button>
-                <span className="text-sm font-medium w-6 text-center">
-                  {item.quantity}
-                </span>
+
+                {editingId === item.product_id ? (
+                  <input
+                    ref={inputRef}
+                    type="number"
+                    min={0}
+                    max={item.available_stock}
+                    value={editValue}
+                    autoFocus
+                    onChange={(e) => setEditValue(e.target.value)}
+                    onBlur={() => commitEdit(item.product_id)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") commitEdit(item.product_id);
+                      if (e.key === "Escape") setEditingId(null);
+                    }}
+                    className="w-12 text-sm font-medium text-center border border-emerald-400 rounded-md
+                               focus:outline-none focus:ring-1 focus:ring-emerald-500 py-0.5"
+                  />
+                ) : (
+                  <button
+                    onClick={() => {
+                      setEditingId(item.product_id);
+                      setEditValue(String(item.quantity));
+                    }}
+                    onDoubleClick={() => setShowKeypadFor(item.product_id)}
+                    className="text-sm font-medium w-8 text-center hover:bg-gray-50 rounded-md py-0.5"
+                    title="Click to type quantity, double-click for keypad"
+                  >
+                    {item.quantity}
+                  </button>
+                )}
+
                 <button
                   onClick={() => incrementItem(item.product_id)}
                   disabled={item.quantity >= item.available_stock}
@@ -68,6 +112,36 @@ export default function CartPanel() {
                 >
                   <Plus className="w-3 h-3" />
                 </button>
+
+                {showKeypadFor === item.product_id && (
+                  <div className="absolute top-full right-0 mt-2 z-30">
+                    <NumericKeypad
+                      onDigit={(digit) => {
+                        const current = editValue === "0" ? "" : editValue;
+                        setEditValue(current + digit);
+                      }}
+                      onBackspace={() => setEditValue((v) => v.slice(0, -1))}
+                      onClear={() => setEditValue("")}
+                    />
+                    <div className="flex gap-2 mt-2">
+                      <button
+                        onClick={() => setShowKeypadFor(null)}
+                        className="flex-1 text-xs py-2 rounded-lg border border-gray-200 text-gray-600 bg-white"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={() => {
+                          commitEdit(item.product_id);
+                          setShowKeypadFor(null);
+                        }}
+                        className="flex-1 text-xs py-2 rounded-lg bg-emerald-600 text-white"
+                      >
+                        Apply
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
 
               <p className="text-sm font-semibold text-gray-900 w-20 text-right shrink-0">
@@ -92,7 +166,7 @@ export default function CartPanel() {
             <input
               type="number"
               min={0}
-              value={discount || ''}
+              value={discount || ""}
               onChange={(e) => setDiscount(Number(e.target.value) || 0)}
               placeholder="0"
               className="w-24 text-right text-sm border border-gray-200 rounded-md px-2 py-1
@@ -112,5 +186,5 @@ export default function CartPanel() {
         </div>
       )}
     </div>
-  )
+  );
 }

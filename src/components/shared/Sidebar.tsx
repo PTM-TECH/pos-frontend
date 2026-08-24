@@ -3,7 +3,7 @@
 
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { LayoutGrid, LogOut, Shield } from 'lucide-react'
+import { LogOut, Shield } from 'lucide-react'
 import { useAuthStore } from '@/store/authStore'
 import { getMainNavItems, getSuperAdminNavItems } from '@/lib/navigation'
 
@@ -42,10 +42,8 @@ export default function Sidebar() {
   return (
     <aside className="w-60 h-screen bg-white border-r border-gray-200 flex flex-col fixed left-0 top-0">
       <div className="h-16 flex items-center gap-2.5 px-5 border-b border-gray-100">
-        <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center">
-          <LayoutGrid className="w-4 h-4 text-white" />
-        </div>
-        <span className="font-semibold text-gray-900 text-sm">BoraPOS</span>
+        <img src="/logo.png" alt="PapoPOS" className="w-8 h-8 rounded-lg object-contain" />
+        <span className="font-semibold text-gray-900 text-sm">PapoPOS</span>
       </div>
 
       <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-0.5">

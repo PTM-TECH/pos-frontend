@@ -1,8 +1,9 @@
 
 'use client'
 
+import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { Pencil, Trash2 } from 'lucide-react'
+import { Pencil, Trash2, Eye } from 'lucide-react'
 import Topbar from '@/components/shared/Topbar'
 import PageHeader from '@/components/ui/PageHeader'
 import DataTable, { Column } from '@/components/ui/DataTable'
@@ -65,6 +66,13 @@ export default function ClientsPage() {
       header: 'Action',
       render: (c) => (
         <div className="flex items-center gap-2">
+          <Link
+            href={`/clients/${c.id}`}
+            className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center
+                       text-gray-500 hover:bg-gray-50"
+          >
+            <Eye className="w-3.5 h-3.5" />
+          </Link>
           <button
             onClick={() => {
               setEditing(c)

@@ -3,7 +3,7 @@
 
 import { useState, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
-import { LayoutGrid, Copy, CheckCircle2, Smartphone } from 'lucide-react'
+import { Copy, CheckCircle2, Smartphone } from 'lucide-react'
 import toast from 'react-hot-toast'
 import Link from 'next/link'
 import { submitPayment } from '@/lib/tenants'
@@ -71,10 +71,8 @@ function VerifyPaymentForm() {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2 mb-6">
-            <div className="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center">
-              <LayoutGrid className="w-4 h-4 text-white" />
-            </div>
-            <span className="font-bold text-white text-sm">BoraPOS</span>
+            <img src="/logo.png" alt="PapoPOS" className="w-12 h-12 rounded-xl object-contain" />
+            <span className="font-bold text-white text-sm">PapoPOS</span>
           </Link>
           <h1 className="text-2xl font-bold text-white mb-2">
             Complete your payment
@@ -164,7 +162,7 @@ function VerifyPaymentForm() {
             <p className="text-xs text-gray-500">
               Having trouble?{' '}
               
-               <a href="mailto:support@borapos.co.ke"
+               <a href="mailto:support@papopos.store"
                 className="text-emerald-400 hover:text-emerald-300"
               >
                 Contact support

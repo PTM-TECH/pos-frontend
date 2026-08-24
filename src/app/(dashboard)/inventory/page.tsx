@@ -2,11 +2,12 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Plus, Search, FolderPlus, Package } from 'lucide-react'
+import { Plus, Search, FolderPlus, Package, SlidersHorizontal } from 'lucide-react'
 import Topbar from '@/components/shared/Topbar'
 import ProductCard from '@/components/dashboard/ProductCard'
 import ProductFormModal from '@/components/dashboard/ProductFormModal'
 import CategoryFormModal from '@/components/dashboard/CategoryFormModal'
+import StockAdjustmentModal from '@/components/dashboard/StockAdjustmentModal'
 import ConfirmDialog from '@/components/ui/ConfirmDialog'
 import { getProducts, deleteProduct, getCategories } from '@/lib/inventory'
 import { Product, Category } from '@/types'
@@ -25,6 +26,7 @@ export default function InventoryPage() {
   const [showProductModal, setShowProductModal] = useState(false)
   const [editingProduct, setEditingProduct] = useState<Product | null>(null)
   const [showCategoryModal, setShowCategoryModal] = useState(false)
+  const [adjustingProduct, setAdjustingProduct] = useState<Product | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<Product | null>(null)
   const [deleting, setDeleting] = useState(false)
 
@@ -128,6 +130,7 @@ export default function InventoryPage() {
                   setShowProductModal(true)
                 }}
                 onDelete={() => setDeleteTarget(product)}
+                onAdjustStock={() => setAdjustingProduct(product)}
               />
             ))}
           </div>
@@ -141,6 +144,17 @@ export default function InventoryPage() {
           onClose={() => setShowProductModal(false)}
           onSaved={() => {
             setShowProductModal(false)
+            loadData()
+          }}
+        />
+      )}
+
+      {adjustingProduct && (
+        <StockAdjustmentModal
+          product={adjustingProduct}
+          onClose={() => setAdjustingProduct(null)}
+          onSaved={() => {
+            setAdjustingProduct(null)
             loadData()
           }}
         />

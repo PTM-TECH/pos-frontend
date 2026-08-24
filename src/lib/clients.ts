@@ -1,6 +1,6 @@
 
 import api from '@/lib/api'
-import { ApiResponse, Client } from '@/types'
+import { ApiResponse, Client, ClientHistory } from '@/types'
 
 export async function searchClients(query: string) {
   const response = await api.get<ApiResponse<Client[]>>('/clients/search', {
@@ -11,6 +11,11 @@ export async function searchClients(query: string) {
 
 export async function getClients() {
   const response = await api.get<ApiResponse<Client[]>>('/clients/')
+  return response.data.data
+}
+
+export async function getClientHistory(clientId: number) {
+  const response = await api.get<ApiResponse<ClientHistory>>(`/clients/${clientId}/history`)
   return response.data.data
 }
 export interface ClientPayload {

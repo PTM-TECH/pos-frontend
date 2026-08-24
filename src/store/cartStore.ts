@@ -9,6 +9,7 @@ interface CartState {
   addItem: (item: CartItem) => void
   incrementItem: (productId: number) => void
   decrementItem: (productId: number) => void
+  setItemQuantity: (productId: number, quantity: number) => void
   removeItem: (productId: number) => void
   setDiscount: (discount: number) => void
   setClientId: (clientId: number | null) => void
@@ -42,6 +43,16 @@ export const useCartStore = create<CartState>((set, get) => ({
         ? { ...i, quantity: Math.min(i.quantity + 1, i.available_stock) }
         : i
     ),
+  })),
+
+  setItemQuantity: (productId: number, quantity: number) => set((state) => ({
+    items: state.items
+      .map((i) =>
+        i.product_id === productId
+          ? { ...i, quantity: Math.max(0, Math.min(quantity, i.available_stock)) }
+          : i
+      )
+      .filter((i) => i.quantity > 0),
   })),
 
   decrementItem: (productId) => set((state) => ({

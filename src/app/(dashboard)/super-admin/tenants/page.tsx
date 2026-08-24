@@ -2,11 +2,12 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { CheckCircle2, XCircle } from 'lucide-react'
+import { CheckCircle2, XCircle, Eye } from 'lucide-react'
 import Topbar from '@/components/shared/Topbar'
 import DataTable, { Column } from '@/components/ui/DataTable'
 import PageHeader from '@/components/ui/PageHeader'
 import api from '@/lib/api'
+import Link from 'next/link'
 import { formatDate, getErrorMessage } from '@/lib/utils'
 import toast from 'react-hot-toast'
 
@@ -106,6 +107,14 @@ export default function TenantsPage() {
       header: 'Action',
       render: (t) => (
         <div className="flex items-center gap-2">
+          <Link
+            href={`/super-admin/tenants/${t.id}`}
+            className="flex items-center gap-1 text-xs font-medium px-2.5 py-1.5
+                       border border-gray-200 text-gray-600 rounded-lg hover:bg-gray-50"
+          >
+            <Eye className="w-3.5 h-3.5" />
+            View
+          </Link>
           {t.status !== 'active' ? (
             <button
               onClick={() => handleActivate(t.id)}

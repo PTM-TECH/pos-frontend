@@ -11,6 +11,8 @@ export interface TenantRegisterPayload {
   store_name:     string
   store_location?: string
   admin_name:     string
+  challenge_token:  string
+  challenge_answer: string
 }
 
 export interface TenantRegisterResponse {
@@ -54,5 +56,19 @@ export async function submitPayment(payload: {
 
 export async function getPlans() {
   const response = await api.get('/plans/')
+  return response.data.data
+}
+
+export async function getMySubscription() {
+  const response = await api.get('/tenants/me/subscription')
+  return response.data.data
+}
+
+export async function uploadLogo(file: File) {
+  const formData = new FormData()
+  formData.append('file', file)
+  const response = await api.post('/tenants/logo', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  })
   return response.data.data
 }

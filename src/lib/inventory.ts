@@ -17,6 +17,15 @@ export async function getProducts(storeId?: number) {
   )
   return response.data.data
 }
+
+export async function getProductByCode(code: string, storeId?: number) {
+  const response = await api.get<ApiResponse<Product>>(
+    `/inventory/products/barcode/${encodeURIComponent(code)}`,
+    { params: storeId ? { store_id: storeId } : {} }
+  )
+  return response.data.data
+}
+
 export async function getLowStockProducts(storeId?: number) {
   const response = await api.get<ApiResponse<Product[]>>(
     '/inventory/products/low-stock',
@@ -40,6 +49,17 @@ export async function createProduct(payload: CreateProductPayload) {
   const response = await api.post<ApiResponse<Product>>(
     '/inventory/products',
     payload
+  )
+  return response.data.data
+}
+
+export async function uploadProductImage(productId: number, file: File) {
+  const formData = new FormData()
+  formData.append('file', file)
+  const response = await api.post<ApiResponse<Product>>(
+    `/inventory/products/${productId}/image`,
+    formData,
+    { headers: { 'Content-Type': 'multipart/form-data' } }
   )
   return response.data.data
 }

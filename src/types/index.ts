@@ -78,6 +78,7 @@ export interface SaleItem {
   quantity: number
   unit_price: number
   subtotal: number
+  returned_quantity: number
 }
 
 export interface Sale {
@@ -85,6 +86,9 @@ export interface Sale {
   store: string | null
   member: string | null
   client: string | null
+  business_name: string | null
+  business_logo: string | null
+  business_phone: string | null
   total: number
   paid: number
   balance: number
@@ -165,4 +169,54 @@ export interface DashboardStats {
   total_paid: number
   total_balance: number
   total_returned: number
+  total_refunds: number
+  total_expenses: number
+  gross_profit: number
+  net_profit: number
+}
+
+export interface SaleReturn {
+  id: number
+  sale_id: number
+  sale_item_id: number
+  product_name: string | null
+  quantity: number
+  refund_amount: number
+  reason: string | null
+  processed_by: string | null
+  created_at: string
+}
+export interface ClientHistory {
+  client: Client
+  total_spent: number
+  total_orders: number
+  average_order: number
+  last_purchase: string | null
+  sales: Sale[]
+}
+
+export interface StockAdjustment {
+  id: number
+  store: string | null
+  product_id: number
+  product_name: string | null
+  product_code: string | null
+  member: string | null
+  adjustment_type: 'increase' | 'decrease'
+  quantity: number
+  reason: string
+  notes: string | null
+  quantity_before: number
+  quantity_after: number
+  created_at: string
+}
+
+export interface AuditLogEntry {
+  id: number
+  member: string
+  action: string
+  entity_type: string
+  entity_id: number | null
+  description: string
+  created_at: string
 }

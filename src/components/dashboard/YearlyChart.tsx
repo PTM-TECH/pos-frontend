@@ -66,6 +66,7 @@ export default function YearlyChart({
             tickLine={false}
           />
           <YAxis
+            domain={[0, 'auto']}
             tick={{ fontSize: 12, fill: '#6b7280' }}
             axisLine={false}
             tickLine={false}

@@ -3,7 +3,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { LayoutGrid, Menu, X } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
@@ -12,10 +12,8 @@ export default function Navbar() {
     <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-gray-950/80 backdrop-blur-md">
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center">
-            <LayoutGrid className="w-4 h-4 text-white" />
-          </div>
-          <span className="font-bold text-white text-sm">BoraPOS</span>
+          <img src="/logo.png" alt="PapoPOS" className="w-8 h-8 rounded-lg object-contain" />
+          <span className="font-bold text-white text-sm">PapoPOS</span>
         </Link>
 
         <div className="hidden md:flex items-center gap-8">

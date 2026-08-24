@@ -9,7 +9,13 @@ import { Product } from '@/types'
 import { formatCurrency, getStatusColor, getStatusLabel } from '@/lib/utils'
 import toast from 'react-hot-toast'
 
-export default function ProductSearch({ storeId }: { storeId?: number }) {
+export default function ProductSearch({ 
+  storeId, 
+  onQueryChange, 
+}: { 
+  storeId?: number
+  onQueryChange?: (query: string) => void
+}) {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<Product[]>([])
   const [loading, setLoading] = useState(false)
@@ -17,6 +23,10 @@ export default function ProductSearch({ storeId }: { storeId?: number }) {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const addItem = useCartStore((state) => state.addItem)
 
+  useEffect(() => {
+    onQueryChange?.(query)
+  }, [query])
+  
   useEffect(() => {
     if (query.trim().length < 2) {
       setResults([])

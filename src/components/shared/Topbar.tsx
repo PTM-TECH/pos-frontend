@@ -10,6 +10,7 @@ import {
 import { Notification } from "@/types";
 import { formatDate } from "@/lib/utils";
 import StoreSwitcher from "./StoreSwitcher";
+import SyncStatusBadge from "./SyncStatusBadge";
 
 export default function Topbar({ title }: { title: string }) {
   const [unreadCount, setUnreadCount] = useState(0);
@@ -71,6 +72,7 @@ export default function Topbar({ title }: { title: string }) {
     <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 sticky top-0 z-10">
       <h1 className="text-lg font-semibold text-gray-900">{title}</h1>
       <div className="flex items-center gap-3">
+        <SyncStatusBadge />
         <StoreSwitcher />
         <div className="relative" ref={dropdownRef}>
           <button

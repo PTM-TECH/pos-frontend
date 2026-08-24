@@ -5,18 +5,13 @@ import { ArrowRight, CheckCircle2 } from 'lucide-react'
 const HIGHLIGHTS = [
   'No setup fees',
   'Cancel anytime',
-  'Free 5-day trial',
+  'Free 14-day trial',
 ]
 
 export default function HeroSection() {
   return (
     <section className="pt-32 pb-20 px-6">
       <div className="max-w-4xl mx-auto text-center">
-        <div className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20
-                        text-emerald-400 text-xs font-medium px-3 py-1.5 rounded-full mb-6">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-          Now available for Kenyan businesses
-        </div>
 
         <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white leading-tight mb-6">
           The POS system your
@@ -24,7 +19,7 @@ export default function HeroSection() {
         </h1>
 
         <p className="text-lg text-gray-400 max-w-2xl mx-auto mb-8 leading-relaxed">
-          Manage sales, inventory, purchases, and staff across multiple stores —
+          Manage sales, inventory, purchases, and staff across multiple stores.
           all from one clean, fast, and affordable platform built for Kenya.
         </p>
 

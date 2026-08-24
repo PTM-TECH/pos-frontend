@@ -1,10 +1,11 @@
-
 'use client'
 
 import { useState, useEffect } from 'react'
+import { ScanLine, Image as ImageIcon, Upload } from 'lucide-react'
+import QRScannerModal from '../pos/QRScannerModal'
 import Modal from '@/components/ui/Modal'
 import { Category, Product } from '@/types'
-import { createProduct, updateProduct } from '@/lib/inventory'
+import { createProduct, updateProduct, uploadProductImage } from '@/lib/inventory'
 import { useAuthStore } from '@/store/authStore'
 import toast from 'react-hot-toast'
 import { getErrorMessage } from '@/lib/utils'
@@ -32,6 +33,11 @@ export default function ProductFormModal({
   const [quantity, setQuantity] = useState(product?.quantity ?? 0)
   const [categoryId, setCategoryId] = useState<number | ''>('')
   const [loading, setLoading] = useState(false)
+  const [showScanner, setShowScanner] = useState(false)
+  const [productImage, setProductImage] = useState(product?.image ?? null)
+  const [uploadingImage, setUploadingImage] = useState(false)
+  const [pendingImageFile, setPendingImageFile] = useState<File | null>(null)
+  const [pendingImagePreview, setPendingImagePreview] = useState<string | null>(null)
 
   useEffect(() => {
     if (product?.category) {
@@ -39,6 +45,40 @@ export default function ProductFormModal({
       if (match) setCategoryId(match.id)
     }
   }, [product, categories])
+
+  async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file || !product) return
+
+    if (file.size > 3 * 1024 * 1024) {
+      toast.error('Image must be under 3MB')
+      return
+    }
+
+    setUploadingImage(true)
+    try {
+      const updated = await uploadProductImage(product.id, file)
+      setProductImage(updated.image)
+      toast.success('Product image updated')
+    } catch (err: any) {
+      toast.error(getErrorMessage(err))
+    } finally {
+      setUploadingImage(false)
+    }
+  }
+
+  function handlePendingImageSelect(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    if (file.size > 3 * 1024 * 1024) {
+      toast.error('Image must be under 3MB')
+      return
+    }
+
+    setPendingImageFile(file)
+    setPendingImagePreview(URL.createObjectURL(file))
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -61,7 +101,7 @@ export default function ProductFormModal({
       })
       toast.success('Product updated successfully')
       } else {
-        await createProduct({
+        const newProduct = await createProduct({
         store_id: storeId ?? 1,
         category_id: categoryId === '' ? null : categoryId,
         name,
@@ -71,6 +111,15 @@ export default function ProductFormModal({
         unit,
         quantity,
         })
+
+        if (pendingImageFile) {
+          try {
+            await uploadProductImage(newProduct.id, pendingImageFile)
+          } catch {
+            toast.error('Product saved, but the image failed to upload. You can add it later by editing the product.')
+          }
+        }
+
         toast.success('Product added successfully')
       }
       onSaved()
@@ -98,7 +147,39 @@ export default function ProductFormModal({
                        focus:outline-none focus:ring-2 focus:ring-emerald-500"
           />
         </div>
-
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1.5">
+            Product Image
+          </label>
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 rounded-lg bg-gray-50 border border-gray-200 flex items-center justify-center overflow-hidden shrink-0">
+              {isEdit && productImage ? (
+                <img src={productImage} alt="Product" className="w-full h-full object-cover" />
+              ) : pendingImagePreview ? (
+                <img src={pendingImagePreview} alt="Selected" className="w-full h-full object-cover" />
+              ) : (
+                <ImageIcon className="w-6 h-6 text-gray-300" />
+              )}
+            </div>
+            <label className="flex items-center gap-2 border border-gray-200 text-gray-700 px-3.5 py-2
+                               rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors cursor-pointer">
+              <Upload className="w-4 h-4" />
+              {uploadingImage ? 'Uploading...' : isEdit ? 'Change photo' : 'Select photo'}
+              <input
+                type="file"
+                accept="image/png,image/jpeg,image/webp"
+                onChange={isEdit ? handleImageUpload : handlePendingImageSelect}
+                disabled={uploadingImage}
+                className="hidden"
+              />
+            </label>
+          </div>
+          {!isEdit && pendingImageFile && (
+            <p className="text-xs text-gray-400 mt-1.5">
+              Photo will upload once you save the product
+            </p>
+          )}
+        </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1.5">
             Description
@@ -118,15 +199,27 @@ export default function ProductFormModal({
             <label className="block text-sm font-medium text-gray-700 mb-1.5">
               Product Code
             </label>
-            <input
-              type="text"
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              placeholder="e.g. HW026"
-              className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm
-                         focus:outline-none focus:ring-2 focus:ring-emerald-500"
-            />
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                placeholder="e.g. HW026"
+                className="flex-1 min-w-0 px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm
+                           focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              />
+              <button
+                type="button"
+                onClick={() => setShowScanner(true)}
+                className="flex items-center justify-center w-10 h-10 border border-gray-200 rounded-lg
+                           text-gray-600 hover:bg-gray-50 transition-colors shrink-0"
+                title="Scan barcode/QR to fill code"
+              >
+                <ScanLine className="w-4 h-4" />
+              </button>
+            </div>
           </div>
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1.5">
               Category
@@ -202,6 +295,16 @@ export default function ProductFormModal({
           {loading ? 'Saving...' : isEdit ? 'Update Product' : 'Add Product'}
         </button>
       </form>
+
+      {showScanner && (
+        <QRScannerModal
+          onScan={(scannedCode) => {
+            setCode(scannedCode)
+            setShowScanner(false)
+          }}
+          onClose={() => setShowScanner(false)}
+        />
+      )}
     </Modal>
   )
 }
