@@ -10,6 +10,8 @@ import { getPlans, Plan } from '@/lib/plans'
 import { getErrorMessage } from '@/lib/utils'
 import AuthSplitLayout from '@/components/shared/AuthSplitLayout'
 import SecurityChallenge from '@/components/shared/SecurityChallenge'
+import PasswordStrengthHints from '@/components/shared/PasswordStrengthHints'
+import { isPasswordValid } from '@/lib/passwordValidator'
 
 
 function RegisterForm() {
@@ -42,8 +44,8 @@ function RegisterForm() {
       toast.error('Please accept the terms of service')
       return
     }
-    if (password.length < 8) {
-      toast.error('Password must be at least 8 characters')
+    if (!isPasswordValid(password)) {
+      toast.error('Please choose a stronger password')
       return
     }
 
@@ -64,10 +66,8 @@ function RegisterForm() {
 
       const selectedPlan = plans.find((p)=> p.name === plan)
 
-      toast.success('Account created! Complete payment to activate.')
-      router.push(
-        `/onboarding/verify-payment?plan=${plan}&email=${encodeURIComponent(email)}&tenant_id=${result.tenant.id}&plan_id=${selectedPlan?.id ?? ''}`
-      )
+      toast.success('Account created! Your 14-day free trial has started.')
+      router.push(`/login?email=${encodeURIComponent(email)}`)
     } catch (err: any) {
       toast.error(getErrorMessage(err))
     } finally {
@@ -173,6 +173,7 @@ function RegisterForm() {
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
             </div>
+            <PasswordStrengthHints password={password} />
           </div>
         </div>
 

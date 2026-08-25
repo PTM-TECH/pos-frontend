@@ -66,6 +66,11 @@ export function getErrorMessage(err: any): string {
     return message
   }
 
+  const detail = err?.response?.data?.detail
+  if (Array.isArray(detail) && detail.length > 0) {
+    return detail[0].msg || 'Invalid input'
+  }
+
   if (message && typeof message === 'object') {
     const firstKey = Object.keys(message)[0]
     const firstError = message[firstKey]

@@ -5,6 +5,8 @@ import { Eye, EyeOff, KeyRound } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { changePassword } from '@/lib/auth'
 import { getErrorMessage } from '@/lib/utils'
+import PasswordStrengthHints from '@/components/shared/PasswordStrengthHints'
+import { isPasswordValid } from '@/lib/passwordValidator'
 
 export default function ChangePasswordForm() {
   const [currentPassword, setCurrentPassword] = useState('')
@@ -17,8 +19,8 @@ export default function ChangePasswordForm() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
 
-    if (newPassword.length < 8) {
-      toast.error('New password must be at least 8 characters')
+    if (!isPasswordValid(newPassword)) {
+      toast.error('Please choose a stronger password')
       return
     }
     if (newPassword !== confirmPassword) {
@@ -108,6 +110,7 @@ export default function ChangePasswordForm() {
               {showNew ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
           </div>
+          <PasswordStrengthHints password={newPassword} />
         </div>
 
         <div>

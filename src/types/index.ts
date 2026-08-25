@@ -220,3 +220,29 @@ export interface AuditLogEntry {
   description: string
   created_at: string
 }
+export interface TenantSubscription {
+  id: number
+  tenant_id: number
+  plan: string | null
+  plan_id: number | null
+  plan_price: number | null
+  status: string
+  billing_cycle: string
+  start_date: string
+  end_date: string | null
+  last_payment: string | null
+  next_payment: string | null
+  amount_paid: number
+  created_at: string
+}
+
+export interface TenantWithSubscription {
+  id: number
+  name: string
+  email: string
+  phone: string | null
+  status: string
+  logo_url: string | null
+  created_at: string
+  subscription: TenantSubscription | null
+}

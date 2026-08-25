@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { AlertTriangle, X } from "lucide-react";
+import { AlertTriangle, Info, X } from "lucide-react";
 import { getMySubscription } from "@/lib/tenants";
 import { useAuthStore } from "@/store/authStore";
 
-const WARNING_THRESHOLD_DAYS = 3;
+const URGENT_THRESHOLD_DAYS = 3;
 
 export default function TrialBanner() {
   const member = useAuthStore((state) => state.member);
@@ -34,36 +34,40 @@ export default function TrialBanner() {
   }, [member]);
 
   if (dismissed) return null;
-  if (daysLeft === null || daysLeft > WARNING_THRESHOLD_DAYS || daysLeft < 0)
+  if (daysLeft === null || daysLeft < 0)
     return null;
+
+  if(status === 'active' && daysLeft > URGENT_THRESHOLD_DAYS) return null
+
+  const isUrgent = daysLeft <= URGENT_THRESHOLD_DAYS
 
   const label =
     status === "trial"
       ? daysLeft === 0
         ? "Your free trial ends today"
-        : `Your free trial ends in ${daysLeft} day${daysLeft === 1 ? "" : "s"}`
+        : `You're on a free trial | ${daysLeft} day${daysLeft === 1 ? "" : "s"} remaining`
       : daysLeft === 0
         ? "Your subscription renews today"
         : `Your subscription renews in ${daysLeft} day${daysLeft === 1 ? "" : "s"}`;
 
   return (
-    <div className="bg-amber-50 border-b border-amber-200 px-6 py-2.5 flex items-center justify-between gap-3 lg:pl-64">
-      <div className="flex items-center gap-2 text-sm text-amber-800">
-        <AlertTriangle className="w-4 h-4 shrink-0" />
-        <span>{label}. Renew now to avoid interruption.</span>
-        <Link
-          href="/billing"
-          className="font-semibold underline hover:no-underline shrink-0"
-        >
-          Manage billing
+    <div
+      className={`border-b px-6 py-2.5 flex items-center justify-between gap-3 lg:pl-64
+        ${isUrgent ? 'bg-amber-50 border-amber-200' : 'bg-blue-50 border-blue-200'}`}
+    >
+      <div className={`flex items-center gap-2 text-sm ${isUrgent ? 'text-amber-800' : 'text-blue-800'}`}>
+        {isUrgent ? <AlertTriangle className="w-4 h-4 shrink-0" /> : <Info className="w-4 h-4 shrink-0" />}
+        <span>{label}.</span>
+        <Link href="/billing" className="font-semibold underline hover:no-underline shrink-0">
+          {status === 'trial' ? 'Upgrade now' : 'Manage billing'}
         </Link>
       </div>
       <button
         onClick={() => setDismissed(true)}
-        className="text-amber-600 hover:text-amber-800 shrink-0"
+        className={isUrgent ? 'text-amber-600 hover:text-amber-800 shrink-0' : 'text-blue-600 hover:text-blue-800 shrink-0'}
       >
         <X className="w-4 h-4" />
       </button>
     </div>
-  );
+  )
 }

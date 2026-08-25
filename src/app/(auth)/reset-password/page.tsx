@@ -9,6 +9,8 @@ import { resetPassword } from '@/lib/auth'
 import { getErrorMessage } from '@/lib/utils'
 import AuthSplitLayout from '@/components/shared/AuthSplitLayout'
 import SecurityChallenge from '@/components/shared/SecurityChallenge'
+import PasswordStrengthHints from '@/components/shared/PasswordStrengthHints'
+import { isPasswordValid } from '@/lib/passwordValidator'
 
 function ResetPasswordForm() {
   const searchParams = useSearchParams()
@@ -26,8 +28,8 @@ function ResetPasswordForm() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
 
-    if (newPassword.length < 8) {
-      toast.error('Password must be at least 8 characters')
+    if (!isPasswordValid(newPassword)) {
+      toast.error('Please choose a stronger password')
       return
     }
     if (newPassword !== confirmPassword) {
@@ -117,6 +119,7 @@ function ResetPasswordForm() {
               {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
           </div>
+          <PasswordStrengthHints password={newPassword} />
         </div>
 
         <div>
