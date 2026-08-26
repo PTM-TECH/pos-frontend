@@ -22,7 +22,7 @@ export default function DashboardLayout({
       <UpdatePrompt />
       <div className="flex">
         <Sidebar />
-        <main className="flex-1 ml-60 min-h-screen bg-gray-50">
+        <main className="flex-1 lg:ml-60 min-h-screen bg-gray-50">
           {children}
         </main>
       </div>

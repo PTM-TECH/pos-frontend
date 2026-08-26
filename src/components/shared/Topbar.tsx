@@ -69,7 +69,7 @@ export default function Topbar({ title }: { title: string }) {
   }
 
   return (
-    <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 sticky top-0 z-10">
+    <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between pl-16 pr-6 lg:px-6 sticky top-0 z-10">
       <h1 className="text-lg font-semibold text-gray-900">{title}</h1>
       <div className="flex items-center gap-3">
         <SyncStatusBadge />

@@ -1,9 +1,10 @@
 
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { LogOut, Shield } from 'lucide-react'
+import { LogOut, Shield, Menu, X } from 'lucide-react'
 import { useAuthStore } from '@/store/authStore'
 import { getMainNavItems, getSuperAdminNavItems } from '@/lib/navigation'
 
@@ -15,6 +16,7 @@ export default function Sidebar() {
   const mainItems       = getMainNavItems(member?.role ?? null)
   const superAdminItems = getSuperAdminNavItems()
   const isSuperAdmin    = member?.role === 'super_admin'
+  const [mobileOpen, setMobileOpen] = useState(false)
 
   function handleLogout() {
     logout()
@@ -27,6 +29,7 @@ export default function Sidebar() {
     return (
       <Link
         href={item.href}
+        onClick={()=> setMobileOpen(false)}
         className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors
           ${isActive
             ? 'bg-emerald-50 text-emerald-700'
@@ -38,12 +41,20 @@ export default function Sidebar() {
       </Link>
     )
   }
-
-  return (
-    <aside className="w-60 h-screen bg-white border-r border-gray-200 flex flex-col fixed left-0 top-0">
-      <div className="h-16 flex items-center gap-2.5 px-5 border-b border-gray-100">
-        <img src="/logo.png" alt="PapoPOS" className="w-8 h-8 rounded-lg object-contain" />
-        <span className="font-semibold text-gray-900 text-sm">PapoPOS</span>
+  const SidebarContent = (
+    <>
+      <div className="h-16 flex items-center justify-between gap-2.5 px-5 border-b border-gray-100">
+        <div className="flex items-center gap-2.5">
+          <img src="/logo.png" alt="PapoPOS" className="w-8 h-8 rounded-lg object-contain" />
+          <span className="font-semibold text-gray-900 text-sm">PapoPOS</span>
+        </div>
+        {/* ADDED — close button, only shown inside the mobile drawer (hidden on desktop via lg:hidden) */}
+        <button
+          onClick={() => setMobileOpen(false)}
+          className="lg:hidden text-gray-400 hover:text-gray-600"
+        >
+          <X className="w-5 h-5" />
+        </button>
       </div>
 
       <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-0.5">
@@ -88,6 +99,34 @@ export default function Sidebar() {
           Log out
         </button>
       </div>
-    </aside>
+    </>
+  )
+
+
+  return (
+    <>
+      <button
+        onClick={() => setMobileOpen(true)}
+        className="lg:hidden fixed top-3 left-3 z-40 w-10 h-10 rounded-lg bg-white border border-gray-200
+                   flex items-center justify-center shadow-sm"
+      >
+        <Menu className="w-5 h-5 text-gray-700" />
+      </button>
+      <aside className="hidden lg:flex w-60 h-screen bg-white border-r border-gray-200 flex-col fixed left-0 top-0 z-30">
+        {SidebarContent}
+      </aside>
+
+      {mobileOpen && (
+        <>
+          <div
+            className="lg:hidden fixed inset-0 bg-black/40 z-40"
+            onClick={() => setMobileOpen(false)}
+          />
+          <aside className="lg:hidden fixed left-0 top-0 w-72 h-screen bg-white z-50 flex flex-col shadow-xl">
+            {SidebarContent}
+          </aside>
+        </>
+      )}
+    </>
   )
 }
