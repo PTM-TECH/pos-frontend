@@ -110,7 +110,7 @@ export default function PricingPage() {
             <h3 className="text-white font-semibold mb-2">How payment works</h3>
             <p className="text-sm text-gray-400 max-w-2xl mx-auto">
               After your 14-day free trial, send payment via M-Pesa to{' '}
-              <span className="text-white font-medium">0705 273 739</span> (Pochi La Biashara).
+              <span className="text-white font-medium">0795 310 021</span> (Pochi La Biashara).
               Send us your M-Pesa confirmation code via WhatsApp or email and we'll
               activate your subscription within 30 minutes during business hours.
             </p>
