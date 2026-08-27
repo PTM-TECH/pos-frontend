@@ -2,15 +2,16 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Plus, Search, FolderPlus, Package, SlidersHorizontal } from 'lucide-react'
+import { Plus, Search, FolderPlus, Package, SlidersHorizontal, PowerOff, Power } from 'lucide-react'
 import Topbar from '@/components/shared/Topbar'
 import ProductCard from '@/components/dashboard/ProductCard'
 import ProductFormModal from '@/components/dashboard/ProductFormModal'
 import CategoryFormModal from '@/components/dashboard/CategoryFormModal'
 import StockAdjustmentModal from '@/components/dashboard/StockAdjustmentModal'
 import ConfirmDialog from '@/components/ui/ConfirmDialog'
-import { getProducts, deleteProduct, getCategories } from '@/lib/inventory'
+import { getProducts, deleteProduct, getCategories, setProductActiveStatus } from '@/lib/inventory'
 import { Product, Category } from '@/types'
+import { getErrorMessage } from '@/lib/utils'
 import { useAuthStore } from '@/store/authStore'
 import { useEffectiveStoreId } from '@/lib/useEffectiveStoreId'
 import toast from 'react-hot-toast'
@@ -27,6 +28,7 @@ export default function InventoryPage() {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null)
   const [showCategoryModal, setShowCategoryModal] = useState(false)
   const [adjustingProduct, setAdjustingProduct] = useState<Product | null>(null)
+  const [showInactive, setShowInactive] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState<Product | null>(null)
   const [deleting, setDeleting] = useState(false)
 
@@ -34,7 +36,7 @@ export default function InventoryPage() {
     setLoading(true)
     try {
       const [productsData, categoriesData] = await Promise.all([
-        getProducts(storeId),
+        getProducts(storeId, showInactive),
         getCategories(),
       ])
       setProducts(productsData)
@@ -48,7 +50,7 @@ export default function InventoryPage() {
 
   useEffect(() => {
     loadData()
-  }, [storeId])
+  }, [storeId, showInactive])
 
   const filtered = products.filter((p) =>
     p.name.toLowerCase().includes(query.toLowerCase())
@@ -66,6 +68,16 @@ export default function InventoryPage() {
       toast.error(err.response?.data?.message || 'Failed to delete product')
     } finally {
       setDeleting(false)
+    }
+  }
+
+  async function handleToggleActive(product: Product) {
+    try {
+      await setProductActiveStatus(product.id, !product.is_active)
+      toast.success(product.is_active ? 'Product deactivated' : 'Product activated')
+      loadData()
+    } catch (err: any) {
+      toast.error(getErrorMessage(err))
     }
   }
 
@@ -88,6 +100,16 @@ export default function InventoryPage() {
           </div>
 
           <div className="flex gap-2 shrink-0">
+            <button
+              onClick={() => setShowInactive(!showInactive)}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors border
+                ${showInactive
+                  ? 'bg-gray-100 text-gray-700 border-gray-300'
+                  : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
+                }`}
+            >
+              {showInactive ? 'Hide inactive' : 'Show inactive'}
+            </button>
             <button
               onClick={() => setShowCategoryModal(true)}
               className="flex items-center gap-2 border border-gray-200 text-gray-700 px-4 py-2.5
@@ -131,6 +153,7 @@ export default function InventoryPage() {
                 }}
                 onDelete={() => setDeleteTarget(product)}
                 onAdjustStock={() => setAdjustingProduct(product)}
+                onToggleActive={()=> handleToggleActive(product)}
               />
             ))}
           </div>

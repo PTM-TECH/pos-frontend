@@ -10,10 +10,10 @@ export async function searchProducts(query: string, storeId?: number) {
   return response.data.data
 }
 
-export async function getProducts(storeId?: number) {
+export async function getProducts(storeId?: number, includeInactive = false) {
   const response = await api.get<ApiResponse<Product[]>>(
     '/inventory/products',
-    { params: storeId ? { store_id: storeId } : {} }
+    { params: { ...(storeId ? { store_id: storeId } : {}), include_inactive: includeInactive } }
   )
   return response.data.data
 }
@@ -22,6 +22,15 @@ export async function getProductByCode(code: string, storeId?: number) {
   const response = await api.get<ApiResponse<Product>>(
     `/inventory/products/barcode/${encodeURIComponent(code)}`,
     { params: storeId ? { store_id: storeId } : {} }
+  )
+  return response.data.data
+}
+
+export async function setProductActiveStatus(id: number, isActive: boolean) {
+  const response = await api.patch<ApiResponse<Product>>(
+    `/inventory/products/${id}/status`,
+    null,
+    { params: { is_active: isActive } }
   )
   return response.data.data
 }

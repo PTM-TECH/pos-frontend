@@ -47,6 +47,7 @@ export interface Product {
   quantity: number
   status: 'in_stock' | 'low_stock' | 'out_of_stock'
   image: string | null
+  is_active: boolean
   created_at: string
 }
 

@@ -109,7 +109,7 @@ export default function ProductFormModal({
         code,
         unit_price: unitPrice,
         unit,
-        quantity,
+        quantity: 0,
         })
 
         if (pendingImageFile) {
@@ -245,7 +245,7 @@ export default function ProductFormModal({
         <div className="grid grid-cols-3 gap-3">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1.5">
-              Unit Price
+              Unit Price (Sell)
             </label>
             <input
               type="number"
@@ -278,11 +278,10 @@ export default function ProductFormModal({
               type="number"
               min={0}
               value={quantity}
-              onChange={(e) => setQuantity(Number(e.target.value))}
-              disabled={isEdit}
-              className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm
-                         focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              disabled
+              className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm bg-gray-50 text-gray-400"
             />
+            <p className="text-xs text-gray-400 mt-1">Add stock via Purchases</p>
           </div>
         </div>
 
