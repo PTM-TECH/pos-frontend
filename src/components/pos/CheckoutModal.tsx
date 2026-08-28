@@ -61,6 +61,11 @@ export default function CheckoutModal({
   const balance = Math.max(total - paid, 0);
   const change = Math.max(paid - total, 0);
 
+  function handlePaymentMethodChange(method: typeof PAYMENT_METHODS[number]['value']){
+    setPaymentMethod(method)
+    setPaid(method=== 'credit' ? 0 : total)
+  }
+
   async function handleConfirm() {
     if (!storeId) {
       toast.error('Please select a specific store before completing a sale')
@@ -200,7 +205,7 @@ export default function CheckoutModal({
                 return (
                   <button
                     key={m.value}
-                    onClick={() => setPaymentMethod(m.value)}
+                    onClick={() => handlePaymentMethodChange(m.value)}
                     className={`flex flex-col items-center gap-1.5 py-3 rounded-xl border-2 transition-colors
                       ${
                         active

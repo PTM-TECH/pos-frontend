@@ -20,6 +20,13 @@ export async function createSale(payload: CreateSalePayload) {
   return response.data.data
 }
 
+export async function recordPayment(saleId: number, amount: number) {
+  const response = await api.patch(`/sales/${saleId}/record-payment`, null, {
+    params: { amount },
+  })
+  return response.data.data
+}
+
 export async function getSales(storeId?: number) {
   const response = await api.get<ApiResponse<Sale[]>>('/sales/', {
     params: storeId ? { store_id: storeId } : {},

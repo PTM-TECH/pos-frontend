@@ -16,6 +16,7 @@ interface ExportParams {
   store_id?: number
   date_from?: string
   date_to?: string
+  payment_method?: string
 }
 
 export async function exportSales(params: ExportParams) {
