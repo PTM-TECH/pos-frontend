@@ -7,6 +7,7 @@ import { Vendor, Product } from "@/types";
 import { createPurchase } from "@/lib/purchases";
 import { getVendors } from "@/lib/vendors";
 import { getProducts } from "@/lib/inventory";
+import { selectOnFocus } from "@/lib/formHelpers";
 import { getErrorMessage, formatCurrency } from "@/lib/utils";
 import { useAuthStore } from "@/store/authStore";
 import { useEffectiveStoreId } from "@/lib/useEffectiveStoreId";
@@ -109,7 +110,7 @@ export default function PurchaseFormModal({
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1.5">
-            Purchase Title
+            Purchase Title <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
@@ -145,12 +146,13 @@ export default function PurchaseFormModal({
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1.5">
-              Amount Paid Now
+              Amount Paid Now <span className="text-red-500">*</span>
             </label>
             <input
               type="number"
               min={0}
               value={paid}
+              onFocus={selectOnFocus}
               onChange={(e) => setPaid(Number(e.target.value) || 0)}
               className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm
                          focus:outline-none focus:ring-2 focus:ring-emerald-500"
@@ -161,7 +163,7 @@ export default function PurchaseFormModal({
         <div>
           <div className="flex items-center justify-between mb-2">
             <label className="block text-sm font-medium text-gray-700">
-              Items
+              Items <span className="text-red-500">*</span>
             </label>
             <button
               type="button"
@@ -171,6 +173,13 @@ export default function PurchaseFormModal({
               <Plus className="w-3.5 h-3.5" />
               Add item
             </button>
+          </div>
+          
+          <div className="flex items-center gap-2 mb-1.5 px-0.5">
+            <span className="flex-1" />
+            <span className="w-16 text-xs font-medium text-gray-500">Qty</span>
+            <span className="w-20 text-xs font-medium text-gray-500">Unit Cost (Buy)</span>
+            <span className="w-4" />
           </div>
 
           <div className="space-y-2">
@@ -199,6 +208,7 @@ export default function PurchaseFormModal({
                   type="number"
                   min={1}
                   value={item.quantity}
+                  onFocus={selectOnFocus}
                   onChange={(e) =>
                     updateRow(index, "quantity", Number(e.target.value) || 1)
                   }
@@ -210,6 +220,7 @@ export default function PurchaseFormModal({
                   type="number"
                   min={0}
                   value={item.cost_price}
+                  onFocus={selectOnFocus}
                   onChange={(e) =>
                     updateRow(index, "cost_price", Number(e.target.value) || 0)
                   }

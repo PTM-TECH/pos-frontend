@@ -15,6 +15,8 @@ import {
   Settings,
   Wallet,
   History,
+  RotateCcw,
+  SlidersHorizontal,
 } from "lucide-react";
 
 export interface NavItem {
@@ -23,6 +25,7 @@ export interface NavItem {
   icon: LucideIcon;
   roles?: string[];
   section?: "main" | "super-admin";
+  group?: string;
 }
 
 export const navItems: NavItem[] = [
@@ -33,24 +36,28 @@ export const navItems: NavItem[] = [
     roles: ["owner", "admin"],
     section: "main",
   },
+  // OPERATIONS
   {
     label: "New Sale",
     href: "/new-sale",
     icon: ShoppingCart,
     section: "main",
+    group: "Operations",
   },
   {
     label: "Sales History",
     href: "/sales",
     icon: Receipt,
     section: "main",
+    group: "Operations",
   },
   {
-    label: "Inventory",
-    href: "/inventory",
-    icon: Package,
-    roles: ["owner", "admin", "stockist"],
+    label: "Returns",
+    href: "/returns",
+    icon: RotateCcw,
+    roles: ["owner", "admin"],
     section: "main",
+    group: "Operations",
   },
   {
     label: "Purchases",
@@ -58,19 +65,57 @@ export const navItems: NavItem[] = [
     icon: Truck,
     roles: ["owner", "admin", "stockist"],
     section: "main",
+    group: "Operations",
   },
+  // PRODUCT MANAGEMENT
+  {
+    label: "Inventory",
+    href: "/inventory",
+    icon: Package,
+    roles: ["owner", "admin", "stockist"],
+    section: "main",
+    group: "Product Management",
+  },
+  {
+    label: "Stock Adjustments",
+    href: "/stock-adjustments",
+    icon: SlidersHorizontal,
+    roles: ["owner", "admin", "stockist"],
+    section: "main",
+    group: "Product Management",
+  },
+  //FINANCE
   {
     label: "Expenses",
     href: "/expenses",
     icon: Wallet,
     roles: ["owner", "admin"],
     section: "main",
+    group: "Finance",
   },
+  {
+    label: "Scheduled Reports",
+    href: "/subscriptions",
+    icon: Bell,
+    roles: ["owner", "admin"],
+    section: "main",
+    group: "Finance",
+  },
+  {
+    label: "Billing",
+    href: "/billing",
+    icon: CreditCard,
+    roles: ["owner", "admin"],
+    section: "main",
+    group: "Finance",
+  },
+  // PEOPLE
   {
     label: "Clients",
     href: "/clients",
     icon: Users,
     section: "main",
+    group: "People",
   },
   {
     label: "Vendors",
@@ -78,6 +123,7 @@ export const navItems: NavItem[] = [
     icon: Truck,
     roles: ["owner", "admin"],
     section: "main",
+    group: "People",
   },
   {
     label: "Members",
@@ -85,21 +131,33 @@ export const navItems: NavItem[] = [
     icon: UserCog,
     roles: ["owner", "admin"],
     section: "main",
+    group: "People",
   },
+  // BUSINESS
   {
     label: "Stores",
     href: "/stores",
     icon: Store,
     roles: ["owner"],
     section: "main",
+    group: "Business",
   },
   {
-    label: "Subscriptions",
-    href: "/subscriptions",
-    icon: Bell,
+    label: "Activity Log",
+    href: "/audit-log",
+    icon: History,
     roles: ["owner", "admin"],
     section: "main",
+    group: "Business",
   },
+  {
+    label: "Settings",
+    href: "/settings",
+    icon: Settings,
+    section: "main",
+    group: "Business",
+  },
+  // SUPER ADMIN
   {
     label: "Tenants",
     href: "/super-admin/tenants",
@@ -127,19 +185,6 @@ export const navItems: NavItem[] = [
     icon: CreditCard,
     roles: ["super_admin"],
     section: "super-admin",
-  },
-  {
-    label: 'Activity Log',
-    href: '/audit-log',
-    icon: History,
-    roles: ['owner', 'admin'],
-    section: 'main',
-  },
-  {
-    label: "Settings",
-    href: "/settings",
-    icon: Settings,
-    section: "main",
   },
 ];
 

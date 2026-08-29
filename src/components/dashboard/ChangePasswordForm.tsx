@@ -66,7 +66,7 @@ export default function ChangePasswordForm() {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1.5">
-            Current Password
+            Current Password <span className="text-red-500">*</span>
           </label>
           <div className="relative">
             <input
@@ -89,7 +89,7 @@ export default function ChangePasswordForm() {
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1.5">
-            New Password
+            New Password <span className="text-red-500">*</span>
           </label>
           <div className="relative">
             <input
@@ -115,7 +115,7 @@ export default function ChangePasswordForm() {
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1.5">
-            Confirm New Password
+            Confirm New Password <span className="text-red-500">*</span>
           </label>
           <input
             type={showNew ? 'text' : 'password'}

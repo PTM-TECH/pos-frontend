@@ -88,7 +88,7 @@ export default function MemberFormModal({
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1.5">
-            Full Name
+            Full Name <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
@@ -102,7 +102,7 @@ export default function MemberFormModal({
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1.5">
-            Email
+            Email <span className="text-red-500">*</span>
           </label>
           <input
             type="email"
@@ -118,7 +118,7 @@ export default function MemberFormModal({
         {!isEdit && (
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1.5">
-              Password
+              Password <span className="text-red-500">*</span>
             </label>
             <input
               type="password"
@@ -149,7 +149,7 @@ export default function MemberFormModal({
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1.5">
-              Role
+              Role <span className="text-red-500">*</span>
             </label>
             <select
               required

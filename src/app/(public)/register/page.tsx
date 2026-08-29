@@ -88,7 +88,7 @@ function RegisterForm() {
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1.5">
-              Business Name
+              Business Name <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -103,7 +103,7 @@ function RegisterForm() {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1.5">
-              Your Full Name
+              Your Full Name <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -120,7 +120,7 @@ function RegisterForm() {
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1.5">
-            Email Address
+            Email Address <span className="text-red-500">*</span>
           </label>
           <input
             type="email"
@@ -151,7 +151,7 @@ function RegisterForm() {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1.5">
-              Password
+              Password <span className="text-red-500">*</span>
             </label>
             <div className="relative">
               <input
@@ -180,7 +180,7 @@ function RegisterForm() {
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1.5">
-              First Store Name
+              First Store Name <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -211,7 +211,7 @@ function RegisterForm() {
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1.5">
-            Plan
+            Plan <span className="text-red-500">*</span>
           </label>
           <select
             value={plan}

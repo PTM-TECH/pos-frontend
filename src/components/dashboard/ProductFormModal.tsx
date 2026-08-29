@@ -9,6 +9,7 @@ import { createProduct, updateProduct, uploadProductImage } from '@/lib/inventor
 import { useAuthStore } from '@/store/authStore'
 import toast from 'react-hot-toast'
 import { getErrorMessage } from '@/lib/utils'
+import { selectOnFocus } from "@/lib/formHelpers";
 import { useEffectiveStoreId } from '@/lib/useEffectiveStoreId'
 
 export default function ProductFormModal({
@@ -135,7 +136,7 @@ export default function ProductFormModal({
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1.5">
-            Product Name
+            Product Name <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
@@ -197,7 +198,7 @@ export default function ProductFormModal({
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1.5">
-              Product Code
+              Product Code <span className="text-red-500">*</span>
             </label>
             <div className="flex gap-2">
               <input
@@ -245,13 +246,14 @@ export default function ProductFormModal({
         <div className="grid grid-cols-3 gap-3">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1.5">
-              Unit Price (Sell)
+              Unit Price (Sell) <span className="text-red-500">*</span>
             </label>
             <input
               type="number"
               required
               min={0}
               value={unitPrice}
+              onFocus={selectOnFocus}
               onChange={(e) => setUnitPrice(Number(e.target.value))}
               className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm
                          focus:outline-none focus:ring-2 focus:ring-emerald-500"

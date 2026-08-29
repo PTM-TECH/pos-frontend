@@ -15,11 +15,24 @@ interface LoginResponseData {
 }
 
 export async function loginRequest(payload: LoginPayload) {
-  const response = await api.post<ApiResponse<LoginResponseData>>(
+  const response = await api.post<ApiResponse<{ pending_token: string; email_hint: string }>>(
     '/auth/login',
     payload
   )
   return response.data.data
+}
+
+export async function verify2FA(pendingToken: string, code: string) {
+  const response = await api.post<ApiResponse<LoginResponseData>>('/auth/verify-2fa', {
+    pending_token: pendingToken,
+    code,
+  })
+  return response.data.data
+}
+
+export async function resend2FA(pendingToken: string) {
+  const response = await api.post('/auth/resend-2fa', { pending_token: pendingToken })
+  return response.data
 }
 
 export async function changePassword(payload: {
