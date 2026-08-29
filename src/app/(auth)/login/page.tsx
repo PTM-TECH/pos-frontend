@@ -8,6 +8,7 @@ import Link from "next/link";
 import { loginRequest, verify2FA, resend2FA } from "@/lib/auth";
 import { useAuthStore } from "@/store/authStore";
 import AuthSplitLayout from "@/components/shared/AuthSplitLayout";
+import TurnstileWidget from '@/components/shared/TurnstileWidget'
 import SecurityChallenge from "@/components/shared/SecurityChallenge";
 
 function LoginForm() {
@@ -21,6 +22,7 @@ function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [challengeToken, setChallengeToken] = useState("");
   const [challengeAnswer, setChallengeAnswer] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState('')
 
   const [stage, setStage] = useState<"credentials" | "code">("credentials");
   const [pendingToken, setPendingToken] = useState("");
@@ -38,6 +40,7 @@ function LoginForm() {
         password,
         challenge_token: challengeToken,
         challenge_answer: challengeAnswer,
+        turnstile_token: turnstileToken,
       });
       setPendingToken(data.pending_token);
       setEmailHint(data.email_hint);
@@ -241,6 +244,7 @@ function LoginForm() {
           </div>
         </div>
 
+        <TurnstileWidget onVerify={setTurnstileToken} />
         <SecurityChallenge
           onChange={(token, answer) => {
             setChallengeToken(token);

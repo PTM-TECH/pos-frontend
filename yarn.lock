@@ -643,6 +643,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@marsidev/react-turnstile@npm:^1.6.1":
+  version: 1.6.1
+  resolution: "@marsidev/react-turnstile@npm:1.6.1"
+  peerDependencies:
+    react: ^17.0.2 || ^18.0.0 || ^19.0
+    react-dom: ^17.0.2 || ^18.0.0 || ^19.0
+  checksum: 10c0/e28c60b75a341b492426a68882c10817b9c7b8b95edc85eb6f375a7479ae7477a057f6b089301b70762f139d7222fd2ea75d7ecb8f8a7d48703e9ee39c35ef0a
+  languageName: node
+  linkType: hard
+
 "@napi-rs/wasm-runtime@npm:^1.1.4":
   version: 1.1.5
   resolution: "@napi-rs/wasm-runtime@npm:1.1.5"
@@ -4154,6 +4164,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "pos-frontend@workspace:."
   dependencies:
+    "@marsidev/react-turnstile": "npm:^1.6.1"
     "@serwist/next": "npm:^9.5.12"
     "@tailwindcss/postcss": "npm:^4"
     "@types/node": "npm:^20"

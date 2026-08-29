@@ -13,6 +13,7 @@ export interface TenantRegisterPayload {
   admin_name:     string
   challenge_token:  string
   challenge_answer: string
+  turnstile_token: string
 }
 
 export interface TenantRegisterResponse {

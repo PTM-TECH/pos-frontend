@@ -9,6 +9,7 @@ import { registerTenant } from '@/lib/tenants'
 import { getPlans, Plan } from '@/lib/plans'
 import { getErrorMessage } from '@/lib/utils'
 import AuthSplitLayout from '@/components/shared/AuthSplitLayout'
+import TurnstileWidget from '@/components/shared/TurnstileWidget'
 import SecurityChallenge from '@/components/shared/SecurityChallenge'
 import PasswordStrengthHints from '@/components/shared/PasswordStrengthHints'
 import { isPasswordValid } from '@/lib/passwordValidator'
@@ -33,6 +34,7 @@ function RegisterForm() {
   const [agreed,         setAgreed]         = useState(false)
   const [challengeToken,  setChallengeToken]  = useState('')
   const [challengeAnswer, setChallengeAnswer] = useState('')
+  const [turnstileToken, setTurnstileToken] = useState('')
 
   useEffect(()=>{
     getPlans().then(setPlans).catch(()=>{})
@@ -62,6 +64,8 @@ function RegisterForm() {
         store_location: storeLocation || undefined,
         challenge_token:  challengeToken,
         challenge_answer: challengeAnswer,
+        turnstile_token: turnstileToken,
+      
       })
 
       const selectedPlan = plans.find((p)=> p.name === plan)
@@ -228,6 +232,7 @@ function RegisterForm() {
           </select>
         </div>
 
+        <TurnstileWidget onVerify={setTurnstileToken} />
         <SecurityChallenge
           onChange={(t, a) => {
             setChallengeToken(t)
