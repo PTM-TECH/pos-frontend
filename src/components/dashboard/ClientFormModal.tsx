@@ -54,7 +54,7 @@ export default function ClientFormModal({
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1.5">
-            Full Name
+            Full Name <span className="text-red-500">*</span>
           </label>
           <input
             type="text"

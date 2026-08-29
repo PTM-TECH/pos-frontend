@@ -54,7 +54,7 @@ export default function VendorFormModal({
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1.5">
-            Vendor Name
+            Vendor Name <span className="text-red-500">*</span>
           </label>
           <input
             type="text"

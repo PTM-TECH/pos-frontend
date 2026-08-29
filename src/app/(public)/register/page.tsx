@@ -9,6 +9,7 @@ import { registerTenant } from '@/lib/tenants'
 import { getPlans, Plan } from '@/lib/plans'
 import { getErrorMessage } from '@/lib/utils'
 import AuthSplitLayout from '@/components/shared/AuthSplitLayout'
+import TurnstileWidget from '@/components/shared/TurnstileWidget'
 import SecurityChallenge from '@/components/shared/SecurityChallenge'
 import PasswordStrengthHints from '@/components/shared/PasswordStrengthHints'
 import { isPasswordValid } from '@/lib/passwordValidator'
@@ -33,6 +34,7 @@ function RegisterForm() {
   const [agreed,         setAgreed]         = useState(false)
   const [challengeToken,  setChallengeToken]  = useState('')
   const [challengeAnswer, setChallengeAnswer] = useState('')
+  const [turnstileToken, setTurnstileToken] = useState('')
 
   useEffect(()=>{
     getPlans().then(setPlans).catch(()=>{})
@@ -62,6 +64,8 @@ function RegisterForm() {
         store_location: storeLocation || undefined,
         challenge_token:  challengeToken,
         challenge_answer: challengeAnswer,
+        turnstile_token: turnstileToken,
+      
       })
 
       const selectedPlan = plans.find((p)=> p.name === plan)
@@ -88,7 +92,7 @@ function RegisterForm() {
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1.5">
-              Business Name
+              Business Name <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -103,7 +107,7 @@ function RegisterForm() {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1.5">
-              Your Full Name
+              Your Full Name <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -120,7 +124,7 @@ function RegisterForm() {
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1.5">
-            Email Address
+            Email Address <span className="text-red-500">*</span>
           </label>
           <input
             type="email"
@@ -151,7 +155,7 @@ function RegisterForm() {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1.5">
-              Password
+              Password <span className="text-red-500">*</span>
             </label>
             <div className="relative">
               <input
@@ -180,7 +184,7 @@ function RegisterForm() {
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1.5">
-              First Store Name
+              First Store Name <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -211,7 +215,7 @@ function RegisterForm() {
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1.5">
-            Plan
+            Plan <span className="text-red-500">*</span>
           </label>
           <select
             value={plan}
@@ -228,6 +232,7 @@ function RegisterForm() {
           </select>
         </div>
 
+        <TurnstileWidget onVerify={setTurnstileToken} />
         <SecurityChallenge
           onChange={(t, a) => {
             setChallengeToken(t)

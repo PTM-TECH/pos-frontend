@@ -1,5 +1,5 @@
 
-import { Package, Pencil, Trash2, SlidersHorizontal } from 'lucide-react'
+import { Package, Pencil, Trash2, SlidersHorizontal, Power, PowerOff } from 'lucide-react'
 import { Product } from '@/types'
 import { formatCurrency, getStatusColor, getStatusLabel } from '@/lib/utils'
 
@@ -8,14 +8,17 @@ export default function ProductCard({
   onEdit,
   onDelete,
   onAdjustStock,
+  onToggleActive,
 }: {
   product: Product
   onEdit: () => void
   onDelete: () => void
   onAdjustStock: () => void
+  onToggleActive: () => void
 }) {
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-5 flex items-center gap-4">
+    <div className={`bg-white rounded-xl border p-5 flex items-center gap-4
+      ${product.is_active ? 'border-gray-200' : 'border-gray-200 opacity-60'}`}>
       <div className="w-16 h-16 rounded-lg bg-gray-100 flex items-center justify-center shrink-0">
         {product.image ? (
           <img
@@ -33,6 +36,11 @@ export default function ProductCard({
           <h3 className="text-sm font-semibold text-gray-900 truncate">
             {product.name}
           </h3>
+          {!product.is_active && (
+            <span className="text-[10px] font-medium px-1.5 py-0.5 rounded border bg-gray-100 text-gray-500 border-gray-200 shrink-0">
+              Inactive
+            </span>
+          )}
           <span
             className={`text-[10px] font-medium px-1.5 py-0.5 rounded border shrink-0 ${getStatusColor(
               product.status
@@ -71,6 +79,14 @@ export default function ProductCard({
           title="Adjust stock"
         >
           <SlidersHorizontal className="w-3.5 h-3.5" />
+        </button>
+        <button
+          onClick={onToggleActive}
+          className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center
+                     text-gray-500 hover:bg-amber-50 hover:text-amber-600"
+          title={product.is_active ? 'Deactivate' : 'Activate'}
+        >
+          {product.is_active ? <PowerOff className="w-3.5 h-3.5" /> : <Power className="w-3.5 h-3.5" />}
         </button>
         <button
           onClick={onDelete}

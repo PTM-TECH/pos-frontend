@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import { Minus, Plus, Trash2, ShoppingCart } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
 import { formatCurrency } from "@/lib/utils";
+import { selectOnFocus } from "@/lib/formHelpers";
 import NumericKeypad from "./NumericKeypad";
 
 export default function CartPanel() {
@@ -167,6 +168,7 @@ export default function CartPanel() {
               type="number"
               min={0}
               value={discount || ""}
+              onFocus={selectOnFocus}
               onChange={(e) => setDiscount(Number(e.target.value) || 0)}
               placeholder="0"
               className="w-24 text-right text-sm border border-gray-200 rounded-md px-2 py-1

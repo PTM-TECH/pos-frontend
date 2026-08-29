@@ -97,7 +97,7 @@ function ResetPasswordForm() {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1.5">
-            New Password
+            New Password <span className="text-red-500">*</span>
           </label>
           <div className="relative">
             <input
@@ -124,7 +124,7 @@ function ResetPasswordForm() {
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1.5">
-            Confirm New Password
+            Confirm New Password <span className="text-red-500">*</span>
           </label>
           <input
             type={showPassword ? 'text' : 'password'}

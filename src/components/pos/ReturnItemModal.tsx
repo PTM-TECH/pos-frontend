@@ -18,7 +18,7 @@ export default function ReturnItemModal({
 }) {
   const maxReturnable = item.quantity - (item.returned_quantity ?? 0)
   const [quantity, setQuantity] = useState(1)
-  const [reason, setReason] = useState('')
+  const [reason, setReason] = useState('other')
   const [loading, setLoading] = useState(false)
 
   async function handleSubmit(e: React.FormEvent) {
@@ -35,7 +35,7 @@ export default function ReturnItemModal({
         quantity,
         reason: reason || undefined,
       })
-      toast.success('Return processed — stock restored')
+      toast.success('Return processed. Stock restored')
       onSaved()
     } catch (err: any) {
       toast.error(getErrorMessage(err))
@@ -53,7 +53,7 @@ export default function ReturnItemModal({
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1.5">
-            Quantity to return
+            Quantity to return <span className="text-red-500">*</span>
           </label>
           <input
             type="number"
@@ -67,18 +67,22 @@ export default function ReturnItemModal({
           />
         </div>
 
-        <div>
+                <div>
           <label className="block text-sm font-medium text-gray-700 mb-1.5">
-            Reason <span className="text-gray-400">(optional)</span>
+            Reason
           </label>
-          <textarea
+          <select
             value={reason}
             onChange={(e) => setReason(e.target.value)}
-            rows={2}
-            placeholder="e.g. Damaged, wrong item, customer changed mind"
             className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm
-                       focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none"
-          />
+                       focus:outline-none focus:ring-2 focus:ring-emerald-500"
+          >
+            <option value="damaged">Damaged</option>
+            <option value="wrong_item">Wrong Item</option>
+            <option value="changed_mind">Changed Mind</option>
+            <option value="defective">Defective</option>
+            <option value="other">Other</option>
+          </select>
         </div>
 
         <button

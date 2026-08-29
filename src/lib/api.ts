@@ -21,7 +21,11 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    const isAuthEndpoint =
+      error.config?.url?.includes('/auth/login') ||
+      error.config?.url?.includes('/auth/verify-2fa');
+
+    if (error.response?.status === 401 && !isAuthEndpoint) {
       useAuthStore.getState().logout();
       if (typeof window !== "undefined") {
         window.location.href = "/login";

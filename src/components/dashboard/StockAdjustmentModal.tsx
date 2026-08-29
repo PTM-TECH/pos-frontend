@@ -1,50 +1,55 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import Modal from '@/components/ui/Modal'
-import { Product } from '@/types'
-import { createStockAdjustment } from '@/lib/stockAdjustments'
-import { getErrorMessage } from '@/lib/utils'
-import toast from 'react-hot-toast'
+import { useState } from "react";
+import Modal from "@/components/ui/Modal";
+import { Product } from "@/types";
+import { createStockAdjustment } from "@/lib/stockAdjustments";
+import { getErrorMessage } from "@/lib/utils";
+import toast from "react-hot-toast";
+import { selectOnFocus } from "@/lib/formHelpers";
 
 const REASONS = [
-  { value: 'damage',   label: 'Damaged' },
-  { value: 'theft',    label: 'Theft / Loss' },
-  { value: 'expired',  label: 'Expired' },
-  { value: 'miscount', label: 'Count correction' },
-  { value: 'other',    label: 'Other' },
-]
+  { value: "damage", label: "Damaged" },
+  { value: "theft", label: "Theft / Loss" },
+  { value: "expired", label: "Expired" },
+  { value: "miscount", label: "Count correction" },
+  { value: "other", label: "Other" },
+];
 
 export default function StockAdjustmentModal({
   product,
   onClose,
   onSaved,
 }: {
-  product: Product
-  onClose: () => void
-  onSaved: () => void
+  product: Product;
+  onClose: () => void;
+  onSaved: () => void;
 }) {
-  const [type, setType] = useState<'increase' | 'decrease'>('decrease')
-  const [quantity, setQuantity] = useState(1)
-  const [reason, setReason] = useState('miscount')
-  const [notes, setNotes] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [type, setType] = useState<"increase" | "decrease">("decrease");
+  const [quantity, setQuantity] = useState(1);
+  const [reason, setReason] = useState("miscount");
+  const [notes, setNotes] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const projectedQuantity =
-    type === 'increase' ? product.quantity + quantity : product.quantity - quantity
+    type === "increase"
+      ? product.quantity + quantity
+      : product.quantity - quantity;
 
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
+    e.preventDefault();
     if (quantity <= 0) {
-      toast.error('Quantity must be greater than zero')
-      return
+      toast.error("Quantity must be greater than zero");
+      return;
     }
-    if (type === 'decrease' && quantity > product.quantity) {
-      toast.error(`Cannot decrease by more than the current stock (${product.quantity})`)
-      return
+    if (type === "decrease" && quantity > product.quantity) {
+      toast.error(
+        `Cannot decrease by more than the current stock (${product.quantity})`,
+      );
+      return;
     }
 
-    setLoading(true)
+    setLoading(true);
     try {
       await createStockAdjustment({
         product_id: product.id,
@@ -52,13 +57,13 @@ export default function StockAdjustmentModal({
         quantity,
         reason,
         notes: notes || undefined,
-      })
-      toast.success('Stock adjustment recorded')
-      onSaved()
+      });
+      toast.success("Stock adjustment recorded");
+      onSaved();
     } catch (err: any) {
-      toast.error(getErrorMessage(err))
+      toast.error(getErrorMessage(err));
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
@@ -66,30 +71,37 @@ export default function StockAdjustmentModal({
     <Modal title={`Adjust Stock: ${product.name}`} onClose={onClose}>
       <form onSubmit={handleSubmit} className="space-y-4">
         <p className="text-xs text-gray-500">
-          Current stock: <span className="font-medium text-gray-900">{product.quantity} {product.unit ?? 'units'}</span>
+          Current stock:{" "}
+          <span className="font-medium text-gray-900">
+            {product.quantity} {product.unit ?? "units"}
+          </span>
         </p>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1.5">Adjustment Type</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1.5">
+            Adjustment Type
+          </label>
           <div className="grid grid-cols-2 gap-2">
             <button
               type="button"
-              onClick={() => setType('decrease')}
+              onClick={() => setType("decrease")}
               className={`py-2.5 rounded-lg text-sm font-medium border transition-colors
-                ${type === 'decrease'
-                  ? 'bg-red-50 text-red-700 border-red-200'
-                  : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
+                ${
+                  type === "decrease"
+                    ? "bg-red-50 text-red-700 border-red-200"
+                    : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
                 }`}
             >
               Decrease
             </button>
             <button
               type="button"
-              onClick={() => setType('increase')}
+              onClick={() => setType("increase")}
               className={`py-2.5 rounded-lg text-sm font-medium border transition-colors
-                ${type === 'increase'
-                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                  : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
+                ${
+                  type === "increase"
+                    ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                    : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
                 }`}
             >
               Increase
@@ -99,19 +111,24 @@ export default function StockAdjustmentModal({
 
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">Quantity</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">
+              Quantity <span className="text-red-500">*</span>
+            </label>
             <input
               type="number"
               required
               min={1}
               value={quantity}
+              onFocus={selectOnFocus}
               onChange={(e) => setQuantity(Number(e.target.value))}
               className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm
                          focus:outline-none focus:ring-2 focus:ring-emerald-500"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">Reason</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">
+              Reason
+            </label>
             <select
               value={reason}
               onChange={(e) => setReason(e.target.value)}
@@ -119,7 +136,9 @@ export default function StockAdjustmentModal({
                          focus:outline-none focus:ring-2 focus:ring-emerald-500"
             >
               {REASONS.map((r) => (
-                <option key={r.value} value={r.value}>{r.label}</option>
+                <option key={r.value} value={r.value}>
+                  {r.label}
+                </option>
               ))}
             </select>
           </div>
@@ -139,8 +158,13 @@ export default function StockAdjustmentModal({
           />
         </div>
 
-        <div className={`rounded-lg p-3 text-sm ${projectedQuantity < 0 ? 'bg-red-50 text-red-700' : 'bg-gray-50 text-gray-700'}`}>
-          New stock level: <span className="font-semibold">{Math.max(projectedQuantity, 0)} {product.unit ?? 'units'}</span>
+        <div
+          className={`rounded-lg p-3 text-sm ${projectedQuantity < 0 ? "bg-red-50 text-red-700" : "bg-gray-50 text-gray-700"}`}
+        >
+          New stock level:{" "}
+          <span className="font-semibold">
+            {Math.max(projectedQuantity, 0)} {product.unit ?? "units"}
+          </span>
         </div>
 
         <button
@@ -149,9 +173,9 @@ export default function StockAdjustmentModal({
           className="w-full bg-emerald-600 text-white py-2.5 rounded-lg text-sm font-medium
                      hover:bg-emerald-700 transition-colors disabled:opacity-60"
         >
-          {loading ? 'Saving...' : 'Record Adjustment'}
+          {loading ? "Saving..." : "Record Adjustment"}
         </button>
       </form>
     </Modal>
-  )
+  );
 }

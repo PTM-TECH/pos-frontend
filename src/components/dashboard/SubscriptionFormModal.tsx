@@ -56,7 +56,7 @@ export default function SubscriptionFormModal({
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1.5">
-            Report Name
+            Report Name <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
@@ -71,7 +71,7 @@ export default function SubscriptionFormModal({
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1.5">
-            Member
+            Member <span className="text-red-500">*</span>
           </label>
           <select
             required
@@ -107,7 +107,7 @@ export default function SubscriptionFormModal({
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1.5">
-              Time
+              Time <span className="text-red-500">*</span>
             </label>
             <input
               type="time"

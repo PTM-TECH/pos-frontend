@@ -6,6 +6,7 @@ import { X, Banknote, Smartphone, FileText, Search, UserX } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
 import { formatCurrency, getErrorMessage } from "@/lib/utils";
 import { createSale } from "@/lib/sales";
+import { selectOnFocus } from "@/lib/formHelpers";
 import { useAuthStore } from "@/store/authStore";
 import toast from "react-hot-toast";
 import { Sale, Client } from "@/types";
@@ -60,6 +61,11 @@ export default function CheckoutModal({
 
   const balance = Math.max(total - paid, 0);
   const change = Math.max(paid - total, 0);
+
+  function handlePaymentMethodChange(method: typeof PAYMENT_METHODS[number]['value']){
+    setPaymentMethod(method)
+    setPaid(method=== 'credit' ? 0 : total)
+  }
 
   async function handleConfirm() {
     if (!storeId) {
@@ -200,7 +206,7 @@ export default function CheckoutModal({
                 return (
                   <button
                     key={m.value}
-                    onClick={() => setPaymentMethod(m.value)}
+                    onClick={() => handlePaymentMethodChange(m.value)}
                     className={`flex flex-col items-center gap-1.5 py-3 rounded-xl border-2 transition-colors
                       ${
                         active
@@ -224,6 +230,7 @@ export default function CheckoutModal({
               type="number"
               min={0}
               value={paid}
+              onFocus={selectOnFocus}
               onChange={(e) => setPaid(Number(e.target.value) || 0)}
               className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm
                          focus:outline-none focus:ring-2 focus:ring-emerald-500"

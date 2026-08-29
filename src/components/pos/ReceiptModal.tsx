@@ -5,8 +5,57 @@ import toast from "react-hot-toast";
 import { X, Printer, RotateCcw } from "lucide-react";
 import { Sale, SaleItem } from "@/types";
 import ReturnItemModal from "./ReturnItemModal";
+import { recordPayment } from "@/lib/sales";
+import { formatCurrency, formatDate, getAssetUrl, getErrorMessage } from "@/lib/utils";
 
-import { formatCurrency, formatDate, getAssetUrl } from "@/lib/utils";
+function ConfirmCreditPaymentForm({
+  sale,
+  onRecorded,
+}: {
+  sale: Sale;
+  onRecorded: () => void;
+}) {
+  const [amount, setAmount] = useState(sale.balance);
+  const [loading, setLoading] = useState(false);
+
+  async function handleConfirm() {
+    setLoading(true);
+    try {
+      await recordPayment(sale.id, amount);
+      toast.success("Payment recorded");
+      onRecorded();
+    } catch (err: any) {
+      toast.error(getErrorMessage(err));
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="border border-amber-200 bg-amber-50 rounded-lg p-3 space-y-2">
+      <p className="text-xs font-medium text-amber-800">
+        Record a payment from this customer
+      </p>
+      <div className="flex gap-2">
+        <input
+          type="number"
+          value={amount}
+          onChange={(e) => setAmount(Number(e.target.value))}
+          max={sale.balance}
+          min={1}
+          className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm"
+        />
+        <button
+          onClick={handleConfirm}
+          disabled={loading}
+          className="px-4 py-2 bg-amber-600 text-white rounded-lg text-sm font-medium disabled:opacity-60"
+        >
+          {loading ? "Recording..." : "Record Payment"}
+        </button>
+      </div>
+    </div>
+  );
+}
 
 export default function ReceiptModal({
   sale,
@@ -18,6 +67,7 @@ export default function ReceiptModal({
   const receiptRef = useRef<HTMLDivElement>(null);
   const [returningItem, setReturningItem] = useState<SaleItem | null>(null);
 
+  
   function handlePrint() {
     const printContent = receiptRef.current?.innerHTML;
     if (!printContent) return;
@@ -58,7 +108,9 @@ export default function ReceiptModal({
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 px-4">
       <div className="bg-white rounded-2xl w-full max-w-sm max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-          <h2 className="text-base font-semibold text-gray-900">Receipt</h2>
+          <h2 className="text-base font-semibold text-gray-900">
+            {sale.payment_method === 'credit' ? 'Invoice' : 'Receipt'}
+          </h2>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600"
@@ -84,8 +136,13 @@ export default function ReceiptModal({
               />
             )}
             <p className="bold text-base">
-              {sale.business_name ?? "SALES RECEIPT"}
+              {sale.business_name ?? (sale.payment_method === 'credit' ? 'INVOICE' : 'SALES RECEIPT')}
             </p>
+            {sale.payment_method === 'credit' && (
+              <p className="bold" style={{ fontSize: 11, marginTop: 2 }}>
+                CREDIT INVOICE | PAYMENT DUE
+              </p>
+            )}
             <p>{sale.store}</p>
             {sale.business_phone && <p>{sale.business_phone}</p>}
             <p>{formatDate(sale.created_at)}</p>
@@ -102,6 +159,10 @@ export default function ReceiptModal({
           <div className="row">
             <span>Client: </span>
             <span>{sale.client ?? "Walk-In"}</span>
+          </div>
+          <div className="row">
+            <span>Payment: </span>
+            <span className="capitalize">{sale.payment_method === 'mpesa' ? 'M-Pesa' : sale.payment_method}</span>
           </div>
           <hr />
           {sale.items.map((item) => (
@@ -139,12 +200,27 @@ export default function ReceiptModal({
             <span>{formatCurrency(sale.balance)}</span>
           </div>
           <hr />
-          <p className="center">Thank you for shopping with us!</p>
+          {sale.payment_method === 'credit' ? (
+            <p className="center bold">
+              Amount Due: {formatCurrency(sale.balance)}
+            </p>
+          ) : (
+            <p className="center">Thank you for shopping with us!</p>
+          )}
           <div className="center" style={{ marginTop: 12, fontSize: 10, color: '#888' }}>
             <p>Software Developed by: Pawatech Systems</p>
             <p>Call/Whatsapp: +254795310021</p>
           </div>
         </div>
+        
+        {sale.payment_method === "credit" && sale.balance > 0 && (
+          <div className="px-6 pb-4">
+            <ConfirmCreditPaymentForm
+              sale={sale}
+              onRecorded={() => window.location.reload()}
+            />
+          </div>
+        )}
 
         {/* Return actions — not part of the printable receipt above */}
         <div className="px-6 pb-4 space-y-1.5">
@@ -171,7 +247,7 @@ export default function ReceiptModal({
             className="w-full flex items-center justify-center gap-2 bg-gray-900 text-white py-3 rounded-xl text-sm font-medium hover:bg-gray-800 transition-colors"
           >
             <Printer className="w-4 h-4" />
-            Print Receipt
+            {sale.payment_method === 'credit' ? 'Print Invoice' : 'Print Receipt'}
           </button>
         </div>
       </div>

@@ -16,6 +16,15 @@ interface ExportParams {
   store_id?: number
   date_from?: string
   date_to?: string
+  payment_method?: string
+}
+
+interface PurchaseExportParams {
+  format: 'xlsx' | 'pdf'
+  store_id?: number
+  vendor_id?: number
+  date_from?: string
+  date_to?: string
 }
 
 export async function exportSales(params: ExportParams) {
@@ -26,4 +35,9 @@ export async function exportSales(params: ExportParams) {
 export async function exportExpenses(params: ExportParams) {
   const response = await api.get('/reports/expenses', { params, responseType: 'blob' })
   downloadBlob(response.data, `expenses-report.${params.format}`)
+}
+
+export async function exportPurchases(params: PurchaseExportParams) {
+  const response = await api.get('/reports/purchases', { params, responseType: 'blob' })
+  downloadBlob(response.data, `purchases-report.${params.format}`)
 }

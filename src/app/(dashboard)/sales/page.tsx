@@ -23,6 +23,17 @@ const DATE_PRESETS = [
   { label: 'Last 30 days', value: '30d' },
   { label: 'Custom range', value: 'custom' },
 ]
+const PAYMENT_METHOD_COLORS: Record<string, string> = {
+  cash:   'bg-emerald-50 text-emerald-700 border-emerald-200',
+  mpesa:  'bg-blue-50 text-blue-700 border-blue-200',
+  credit: 'bg-amber-50 text-amber-700 border-amber-200',
+}
+
+const PAYMENT_METHOD_LABELS: Record<string, string> = {
+  cash: 'Cash',
+  mpesa: 'M-Pesa',
+  credit: 'Credit',
+}
 
 export default function SalesPage() {
   const storeId = useEffectiveStoreId()
@@ -34,6 +45,7 @@ export default function SalesPage() {
   const [datePreset, setDatePreset] = useState('all')
   const [customFrom, setCustomFrom] = useState('')
   const [customTo, setCustomTo] = useState('')
+  const [paymentFilter, setPaymentFilter] = useState<string>('all')
 
   async function loadData() {
     setLoading(true)
@@ -81,7 +93,7 @@ export default function SalesPage() {
     return true
   }
 
-    function getExportDateRange(): { date_from?: string; date_to?: string } {
+  function getExportDateRange(): { date_from?: string; date_to?: string } {
     const now = new Date()
     if (datePreset === 'today') {
       const today = now.toISOString().slice(0, 10)
@@ -107,6 +119,7 @@ export default function SalesPage() {
     await exportSales({
       format,
       store_id: storeId,
+      payment_method: paymentFilter === 'all' ? undefined : paymentFilter,
       ...getExportDateRange(),
     })
     toast.success('Export downloaded')
@@ -119,6 +132,7 @@ export default function SalesPage() {
       s.items.some((item) =>
         (item.product_name ?? '').toLowerCase().includes(query.toLowerCase())
       )
+    const matchesPayment = paymentFilter === 'all' || s.payment_method === paymentFilter
     return matchesQuery && isWithinDateRange(s.created_at)
   })
 
@@ -130,6 +144,14 @@ export default function SalesPage() {
     { header: 'Total', render: (s) => formatCurrency(s.total) },
     { header: 'Paid', render: (s) => formatCurrency(s.paid) },
     { header: 'Balance', render: (s) => formatCurrency(s.balance) },
+    {
+      header: 'Payment',
+      render: (s) => (
+        <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded border capitalize ${PAYMENT_METHOD_COLORS[s.payment_method] ?? ''}`}>
+          {PAYMENT_METHOD_LABELS[s.payment_method] ?? s.payment_method}
+        </span>
+      ),
+    },
     {
       header: 'Status',
       render: (s) => (
@@ -205,6 +227,21 @@ export default function SalesPage() {
               />
             </div>
           )}
+          <div className="w-px h-5 bg-gray-200 mx-1" />
+
+          {['all', 'cash', 'mpesa', 'credit'].map((method) => (
+            <button
+              key={method}
+              onClick={() => setPaymentFilter(method)}
+              className={`text-xs font-medium px-3 py-1.5 rounded-lg border transition-colors capitalize
+                ${paymentFilter === method
+                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                  : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
+                }`}
+            >
+              {method === 'all' ? 'All Payments' : PAYMENT_METHOD_LABELS[method]}
+            </button>
+          ))}
         </div>
         <DataTable columns={columns} data={filtered} loading={loading} emptyMessage="No sales found" />
       </div>
