@@ -52,6 +52,10 @@ export interface CreateProductPayload {
   unit?: string
   quantity?: number
   image?: string
+  initial_quantity?: number
+  cost_price?: number
+  purchase_title?: string
+  vendor_id?: number | null
 }
 
 export async function createProduct(payload: CreateProductPayload) {
@@ -69,6 +73,19 @@ export async function uploadProductImage(productId: number, file: File) {
     `/inventory/products/${productId}/image`,
     formData,
     { headers: { 'Content-Type': 'multipart/form-data' } }
+  )
+  return response.data.data
+}
+
+export async function addStock(productId: number, payload: {
+  quantity: number
+  cost_price: number
+  title: string
+  vendor_id?: number | null
+}) {
+  const response = await api.post<ApiResponse<Product>>(
+    `/inventory/products/${productId}/add-stock`,
+    payload
   )
   return response.data.data
 }

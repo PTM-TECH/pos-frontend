@@ -9,19 +9,26 @@ import NumericKeypad from "./NumericKeypad";
 
 export default function CartPanel() {
   const items = useCartStore((state) => state.items);
-  const discount = useCartStore((state) => state.discount);
+  const getTotalDiscount = useCartStore((state) => state.getTotalDiscount);
+  const getTotal = useCartStore((state) => state.getTotal);
+  const getSubtotal = useCartStore((state) => state.getSubtotal);
   const incrementItem = useCartStore((state) => state.incrementItem);
   const decrementItem = useCartStore((state) => state.decrementItem);
-  const setItemQuantity = useCartStore((state) => state.setItemQuantity)
+  const setItemQuantity = useCartStore((state) => state.setItemQuantity);
+  const setItemSellingPrice = useCartStore(
+    (state) => state.setItemSellingPrice,
+  );
   const removeItem = useCartStore((state) => state.removeItem);
-  const setDiscount = useCartStore((state) => state.setDiscount);
-  const getSubtotal = useCartStore((state) => state.getSubtotal);
 
   const subtotal = getSubtotal();
+  const total = getTotal();
+  const totalDiscount = getTotalDiscount();
 
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editValue, setEditValue] = useState("");
   const [showKeypadFor, setShowKeypadFor] = useState<number | null>(null);
+  const [editingPriceId, setEditingPriceId] = useState<number | null>(null);
+  const [editPriceValue, setEditPriceValue] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
   function commitEdit(productId: number) {
@@ -30,6 +37,14 @@ export default function CartPanel() {
       setItemQuantity(productId, parsed);
     }
     setEditingId(null);
+  }
+
+  function commitPriceEdit(productId: number) {
+    const parsed = parseFloat(editPriceValue);
+    if (!isNaN(parsed) && parsed >= 0) {
+      setItemSellingPrice(productId, parsed);
+    }
+    setEditingPriceId(null);
   }
 
   return (
@@ -97,7 +112,10 @@ export default function CartPanel() {
                       setEditingId(item.product_id);
                       setEditValue(String(item.quantity));
                     }}
-                    onDoubleClick={() => setShowKeypadFor(item.product_id)}
+                    onDoubleClick={() => {
+                      setEditValue(String(item.quantity));
+                      setShowKeypadFor(item.product_id);
+                    }}
                     className="text-sm font-medium w-8 text-center hover:bg-gray-50 rounded-md py-0.5"
                     title="Click to type quantity, double-click for keypad"
                   >
@@ -145,9 +163,43 @@ export default function CartPanel() {
                 )}
               </div>
 
-              <p className="text-sm font-semibold text-gray-900 w-20 text-right shrink-0">
-                {formatCurrency(item.quantity * item.unit_price)}
-              </p>
+              <div className="w-20 text-right shrink-0">
+                {item.selling_price < item.unit_price && (
+                  <p className="text-[10px] text-gray-400 line-through">
+                    {formatCurrency(item.quantity * item.unit_price)}
+                  </p>
+                )}
+                {editingPriceId === item.product_id ? (
+                  <input
+                    type="number"
+                    min={0}
+                    step="0.01"
+                    value={editPriceValue}
+                    autoFocus
+                    onFocus={selectOnFocus}
+                    onChange={(e) => setEditPriceValue(e.target.value)}
+                    onBlur={() => commitPriceEdit(item.product_id)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") commitPriceEdit(item.product_id);
+                      if (e.key === "Escape") setEditingPriceId(null);
+                    }}
+                    className="w-full text-sm font-semibold text-right border border-emerald-400 rounded-md
+                              focus:outline-none focus:ring-1 focus:ring-emerald-500 py-0.5 px-1"
+                  />
+                ) : (
+                  <button
+                    onClick={() => {
+                      setEditingPriceId(item.product_id);
+                      setEditPriceValue(String(item.selling_price));
+                    }}
+                    className={`text-sm font-semibold w-full text-right hover:bg-gray-50 rounded-md py-0.5 px-1
+                      ${item.selling_price < item.unit_price ? "text-emerald-600" : "text-gray-900"}`}
+                    title="Click to offer a discount"
+                  >
+                    {formatCurrency(item.quantity * item.selling_price)}
+                  </button>
+                )}
+              </div>
 
               <button
                 onClick={() => removeItem(item.product_id)}
@@ -162,19 +214,16 @@ export default function CartPanel() {
 
       {items.length > 0 && (
         <div className="border-t border-gray-100 px-5 py-4 space-y-3">
-          <div className="flex items-center justify-between">
-            <label className="text-sm text-gray-500">Discount (KES)</label>
-            <input
-              type="number"
-              min={0}
-              value={discount || ""}
-              onFocus={selectOnFocus}
-              onChange={(e) => setDiscount(Number(e.target.value) || 0)}
-              placeholder="0"
-              className="w-24 text-right text-sm border border-gray-200 rounded-md px-2 py-1
-                         focus:outline-none focus:ring-2 focus:ring-emerald-500"
-            />
-          </div>
+          
+          {totalDiscount > 0 && (
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-emerald-600">Discount applied</span>
+              <span className="text-emerald-600 font-medium">
+                -{formatCurrency(totalDiscount)}
+              </span>
+            </div>
+          )}
+
           <div className="flex items-center justify-between text-sm text-gray-500">
             <span>Subtotal</span>
             <span>{formatCurrency(subtotal)}</span>
@@ -182,7 +231,7 @@ export default function CartPanel() {
           <div className="flex items-center justify-between pt-2 border-t border-gray-100">
             <span className="text-base font-semibold text-gray-900">Total</span>
             <span className="text-lg font-bold text-emerald-600">
-              {formatCurrency(Math.max(subtotal - discount, 0))}
+              {formatCurrency(total)}
             </span>
           </div>
         </div>

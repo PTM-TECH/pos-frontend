@@ -5,6 +5,8 @@ import { Plus, Trash2 } from "lucide-react";
 import Modal from "@/components/ui/Modal";
 import { Vendor, Product } from "@/types";
 import { createPurchase } from "@/lib/purchases";
+import { getStores } from "@/lib/stores";
+import { Store } from "@/types";
 import { getVendors } from "@/lib/vendors";
 import { getProducts } from "@/lib/inventory";
 import { selectOnFocus } from "@/lib/formHelpers";
@@ -26,17 +28,34 @@ export default function PurchaseFormModal({
   onClose: () => void;
   onSaved: () => void;
 }) {
-  const storeId = useEffectiveStoreId()
+  const storeId = useEffectiveStoreId();
   const member = useAuthStore((state) => state.member);
   const [vendors, setVendors] = useState<Vendor[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [title, setTitle] = useState("");
   const [vendorId, setVendorId] = useState<number | "">("");
+  const [stores, setStores] = useState<Store[]>([]);
+  const [selectedStoreId, setSelectedStoreId] = useState<number | "">(
+    storeId ?? "",
+  );
   const [paid, setPaid] = useState(0);
   const [items, setItems] = useState<ItemRow[]>([
     { product_id: "", quantity: 1, cost_price: 0 },
   ]);
   const [loading, setLoading] = useState(false);
+
+  const isFormValid =
+    selectedStoreId !== "" &&
+    title.trim().length > 0 &&
+    paid >= 0 &&
+    items.length > 0 &&
+    items.every((item) => item.product_id !== "" && item.quantity > 0);
+
+  useEffect(() => {
+    getStores()
+      .then(setStores)
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     getVendors()
@@ -72,7 +91,7 @@ export default function PurchaseFormModal({
     e.preventDefault();
 
     if (!title.trim()) {
-      toast.error("Purchase title is required");
+      toast.error("Please enter a purchase title");
       return;
     }
     const validItems = items.filter(
@@ -85,8 +104,13 @@ export default function PurchaseFormModal({
 
     setLoading(true);
     try {
+      if (selectedStoreId === "") {
+        toast.error("Please select a store");
+        return;
+      }
+
       await createPurchase({
-        store_id: storeId ?? 1,
+        store_id: selectedStoreId,
         vendor_id: vendorId === "" ? null : vendorId,
         title,
         paid,
@@ -108,6 +132,28 @@ export default function PurchaseFormModal({
   return (
     <Modal title="New Purchase Order" onClose={onClose} maxWidth="max-w-lg">
       <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1.5">
+            Store <span className="text-red-500">*</span>
+          </label>
+          <select
+            value={selectedStoreId}
+            onChange={(e) =>
+              setSelectedStoreId(
+                e.target.value === "" ? "" : Number(e.target.value),
+              )
+            }
+            className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm
+                       focus:outline-none focus:ring-2 focus:ring-emerald-500"
+          >
+            <option value="">Select a store</option>
+            {stores.map((s) => (
+              <option key={s.id} value={s.id}>
+                {s.name}
+              </option>
+            ))}
+          </select>
+        </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1.5">
             Purchase Title <span className="text-red-500">*</span>
@@ -146,99 +192,120 @@ export default function PurchaseFormModal({
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1.5">
-              Amount Paid Now <span className="text-red-500">*</span>
+              Amount Paid Now
             </label>
             <input
               type="number"
               min={0}
               value={paid}
+              required
               onFocus={selectOnFocus}
               onChange={(e) => setPaid(Number(e.target.value) || 0)}
               className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm
                          focus:outline-none focus:ring-2 focus:ring-emerald-500"
             />
+            <p className="text-xs text-gray-400 mt-1">
+              Leave as 0 if this purchase is entirely on credit
+            </p>
           </div>
         </div>
+        {selectedStoreId === "" ? (
+          <div className="text-center py-8 bg-gray-50 rounded-lg border border-dashed border-gray-300">
+            <p className="text-sm text-gray-500">
+              Select a store above before adding items
+            </p>
+          </div>
+        ) : (
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Items <span className="text-red-500">*</span>
+              </label>
+            </div>
 
-        <div>
-          <div className="flex items-center justify-between mb-2">
-            <label className="block text-sm font-medium text-gray-700">
-              Items <span className="text-red-500">*</span>
-            </label>
-            <button
-              type="button"
-              onClick={addRow}
-              className="flex items-center gap-1 text-xs font-medium text-emerald-600 hover:text-emerald-700"
-            >
-              <Plus className="w-3.5 h-3.5" />
-              Add item
-            </button>
-          </div>
-          
-          <div className="flex items-center gap-2 mb-1.5 px-0.5">
-            <span className="flex-1" />
-            <span className="w-16 text-xs font-medium text-gray-500">Qty</span>
-            <span className="w-20 text-xs font-medium text-gray-500">Unit Cost (Buy)</span>
-            <span className="w-4" />
-          </div>
+            <div className="flex items-center gap-2 mb-1.5 px-0.5">
+              <span className="flex-1" />
+              <span className="w-16 text-xs font-medium text-gray-500">
+                Qty
+              </span>
+              <span className="w-20 text-xs font-medium text-gray-500">
+                Unit Cost (Buy)
+              </span>
+              <span className="w-4" />
+            </div>
 
-          <div className="space-y-2">
-            {items.map((item, index) => (
-              <div key={index} className="flex items-center gap-2">
-                <select
-                  value={item.product_id}
-                  onChange={(e) =>
-                    updateRow(
-                      index,
-                      "product_id",
-                      e.target.value === "" ? "" : Number(e.target.value),
-                    )
-                  }
-                  className="flex-1 px-2.5 py-2 border border-gray-300 rounded-lg text-sm
+            <div className="space-y-2">
+              {items.map((item, index) => (
+                <div key={index} className="flex items-center gap-2">
+                  <select
+                    value={item.product_id}
+                    onChange={(e) =>
+                      updateRow(
+                        index,
+                        "product_id",
+                        e.target.value === "" ? "" : Number(e.target.value),
+                      )
+                    }
+                    className="flex-1 px-2.5 py-2 border border-gray-300 rounded-lg text-sm
                              focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                >
-                  <option value="">Select product</option>
-                  {products.map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {p.name}
-                    </option>
-                  ))}
-                </select>
-                <input
-                  type="number"
-                  min={1}
-                  value={item.quantity}
-                  onFocus={selectOnFocus}
-                  onChange={(e) =>
-                    updateRow(index, "quantity", Number(e.target.value) || 1)
-                  }
-                  placeholder="Qty"
-                  className="w-16 px-2 py-2 border border-gray-300 rounded-lg text-sm
+                  >
+                    <option value="">Select product</option>
+                    {products.map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.name}
+                      </option>
+                    ))}
+                  </select>
+                  <input
+                    type="number"
+                    min={1}
+                    value={item.quantity}
+                    onFocus={selectOnFocus}
+                    onChange={(e) =>
+                      updateRow(index, "quantity", Number(e.target.value) || 1)
+                    }
+                    placeholder="Qty"
+                    className="w-16 px-2 py-2 border border-gray-300 rounded-lg text-sm
                              focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                />
-                <input
-                  type="number"
-                  min={0}
-                  value={item.cost_price}
-                  onFocus={selectOnFocus}
-                  onChange={(e) =>
-                    updateRow(index, "cost_price", Number(e.target.value) || 0)
-                  }
-                  placeholder="Cost"
-                  className="w-20 px-2 py-2 border border-gray-300 rounded-lg text-sm
+                  />
+                  <input
+                    type="number"
+                    min={0}
+                    value={item.cost_price}
+                    onFocus={selectOnFocus}
+                    onChange={(e) =>
+                      updateRow(
+                        index,
+                        "cost_price",
+                        Number(e.target.value) || 0,
+                      )
+                    }
+                    placeholder="Cost"
+                    className="w-20 px-2 py-2 border border-gray-300 rounded-lg text-sm
                              focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                />
-                <button
-                  type="button"
-                  onClick={() => removeRow(index)}
-                  className="text-gray-300 hover:text-red-500 shrink-0"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              </div>
-            ))}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeRow(index)}
+                    className="text-gray-300 hover:text-red-500 shrink-0"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+            <div className="flex justify-end mt-2">
+              <button
+                type="button"
+                onClick={addRow}
+                className="flex items-center gap-1 text-xs font-medium text-emerald-600 hover:text-emerald-700"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                Add item
+              </button>
+            </div>
           </div>
-        </div>
+        )}
 
         <div className="flex items-center justify-between pt-2 border-t border-gray-100">
           <span className="text-sm font-medium text-gray-700">Total</span>
@@ -249,7 +316,7 @@ export default function PurchaseFormModal({
 
         <button
           type="submit"
-          disabled={loading}
+          disabled={loading || !isFormValid}
           className="w-full bg-emerald-600 text-white py-2.5 rounded-lg text-sm font-medium
                      hover:bg-emerald-700 transition-colors disabled:opacity-60"
         >

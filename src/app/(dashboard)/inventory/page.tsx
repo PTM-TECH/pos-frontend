@@ -1,83 +1,103 @@
+"use client";
 
-'use client'
-
-import { useEffect, useState } from 'react'
-import { Plus, Search, FolderPlus, Package, SlidersHorizontal, PowerOff, Power } from 'lucide-react'
-import Topbar from '@/components/shared/Topbar'
-import ProductCard from '@/components/dashboard/ProductCard'
-import ProductFormModal from '@/components/dashboard/ProductFormModal'
-import CategoryFormModal from '@/components/dashboard/CategoryFormModal'
-import StockAdjustmentModal from '@/components/dashboard/StockAdjustmentModal'
-import ConfirmDialog from '@/components/ui/ConfirmDialog'
-import { getProducts, deleteProduct, getCategories, setProductActiveStatus } from '@/lib/inventory'
-import { Product, Category } from '@/types'
-import { getErrorMessage } from '@/lib/utils'
-import { useAuthStore } from '@/store/authStore'
-import { useEffectiveStoreId } from '@/lib/useEffectiveStoreId'
-import toast from 'react-hot-toast'
+import { useEffect, useState } from "react";
+import {
+  Plus,
+  Search,
+  FolderPlus,
+  Package,
+  SlidersHorizontal,
+  PowerOff,
+  Power,
+} from "lucide-react";
+import Topbar from "@/components/shared/Topbar";
+import ProductCard from "@/components/dashboard/ProductCard";
+import AddStockModal from "@/components/dashboard/AddStockModal";
+import ProductFormModal from "@/components/dashboard/ProductFormModal";
+import CategoryFormModal from "@/components/dashboard/CategoryFormModal";
+import StockAdjustmentModal from "@/components/dashboard/StockAdjustmentModal";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
+import {
+  getProducts,
+  deleteProduct,
+  getCategories,
+  setProductActiveStatus,
+} from "@/lib/inventory";
+import { Product, Category } from "@/types";
+import { getErrorMessage } from "@/lib/utils";
+import { useAuthStore } from "@/store/authStore";
+import { useEffectiveStoreId } from "@/lib/useEffectiveStoreId";
+import toast from "react-hot-toast";
 
 export default function InventoryPage() {
-  const storeId = useEffectiveStoreId()
-  const member = useAuthStore((state) => state.member)
-  const [products, setProducts] = useState<Product[]>([])
-  const [categories, setCategories] = useState<Category[]>([])
-  const [query, setQuery] = useState('')
-  const [loading, setLoading] = useState(true)
+  const storeId = useEffectiveStoreId();
+  const member = useAuthStore((state) => state.member);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [query, setQuery] = useState("");
+  const [loading, setLoading] = useState(true);
 
-  const [showProductModal, setShowProductModal] = useState(false)
-  const [editingProduct, setEditingProduct] = useState<Product | null>(null)
-  const [showCategoryModal, setShowCategoryModal] = useState(false)
-  const [adjustingProduct, setAdjustingProduct] = useState<Product | null>(null)
-  const [showInactive, setShowInactive] = useState(false)
-  const [deleteTarget, setDeleteTarget] = useState<Product | null>(null)
-  const [deleting, setDeleting] = useState(false)
+  const [showProductModal, setShowProductModal] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
+  const [adjustingProduct, setAdjustingProduct] = useState<Product | null>(
+    null,
+  );
+  const [addingStockProduct, setAddingStockProduct] = useState<Product | null>(
+    null,
+  );
+  const [showInactive, setShowInactive] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<Product | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   async function loadData() {
-    setLoading(true)
+    setLoading(true);
     try {
       const [productsData, categoriesData] = await Promise.all([
         getProducts(storeId, showInactive),
         getCategories(),
-      ])
-      setProducts(productsData)
-      setCategories(categoriesData)
+      ]);
+      setProducts(productsData);
+      setCategories(categoriesData);
     } catch {
-      toast.error('Failed to load inventory')
+      toast.error("Failed to load inventory");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
   useEffect(() => {
-    loadData()
-  }, [storeId, showInactive])
+    loadData();
+  }, [storeId, showInactive]);
 
   const filtered = products.filter((p) =>
-    p.name.toLowerCase().includes(query.toLowerCase())
-  )
+    p.name.toLowerCase().includes(query.toLowerCase()),
+  );
 
   async function handleDelete() {
-    if (!deleteTarget) return
-    setDeleting(true)
+    if (!deleteTarget) return;
+    setDeleting(true);
     try {
-      await deleteProduct(deleteTarget.id)
-      toast.success('Product deleted')
-      setDeleteTarget(null)
-      loadData()
+      await deleteProduct(deleteTarget.id);
+      toast.success("Product deleted");
+      setDeleteTarget(null);
+      loadData();
     } catch (err: any) {
-      toast.error(err.response?.data?.message || 'Failed to delete product')
+      toast.error(err.response?.data?.message || "Failed to delete product");
     } finally {
-      setDeleting(false)
+      setDeleting(false);
     }
   }
 
   async function handleToggleActive(product: Product) {
     try {
-      await setProductActiveStatus(product.id, !product.is_active)
-      toast.success(product.is_active ? 'Product deactivated' : 'Product activated')
-      loadData()
+      await setProductActiveStatus(product.id, !product.is_active);
+      toast.success(
+        product.is_active ? "Product deactivated" : "Product activated",
+      );
+      loadData();
     } catch (err: any) {
-      toast.error(getErrorMessage(err))
+      toast.error(getErrorMessage(err));
     }
   }
 
@@ -103,12 +123,13 @@ export default function InventoryPage() {
             <button
               onClick={() => setShowInactive(!showInactive)}
               className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors border
-                ${showInactive
-                  ? 'bg-gray-100 text-gray-700 border-gray-300'
-                  : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
+                ${
+                  showInactive
+                    ? "bg-gray-100 text-gray-700 border-gray-300"
+                    : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
                 }`}
             >
-              {showInactive ? 'Hide inactive' : 'Show inactive'}
+              {showInactive ? "Hide inactive" : "Show inactive"}
             </button>
             <button
               onClick={() => setShowCategoryModal(true)}
@@ -120,8 +141,8 @@ export default function InventoryPage() {
             </button>
             <button
               onClick={() => {
-                setEditingProduct(null)
-                setShowProductModal(true)
+                setEditingProduct(null);
+                setShowProductModal(true);
               }}
               className="flex items-center gap-2 bg-emerald-600 text-white px-4 py-2.5
                          rounded-lg text-sm font-medium hover:bg-emerald-700 transition-colors"
@@ -148,12 +169,13 @@ export default function InventoryPage() {
                 key={product.id}
                 product={product}
                 onEdit={() => {
-                  setEditingProduct(product)
-                  setShowProductModal(true)
+                  setEditingProduct(product);
+                  setShowProductModal(true);
                 }}
                 onDelete={() => setDeleteTarget(product)}
                 onAdjustStock={() => setAdjustingProduct(product)}
-                onToggleActive={()=> handleToggleActive(product)}
+                onAddStock={() => setAddingStockProduct(product)}
+                onToggleActive={() => handleToggleActive(product)}
               />
             ))}
           </div>
@@ -166,8 +188,8 @@ export default function InventoryPage() {
           categories={categories}
           onClose={() => setShowProductModal(false)}
           onSaved={() => {
-            setShowProductModal(false)
-            loadData()
+            setShowProductModal(false);
+            loadData();
           }}
         />
       )}
@@ -177,8 +199,19 @@ export default function InventoryPage() {
           product={adjustingProduct}
           onClose={() => setAdjustingProduct(null)}
           onSaved={() => {
-            setAdjustingProduct(null)
-            loadData()
+            setAdjustingProduct(null);
+            loadData();
+          }}
+        />
+      )}
+
+      {addingStockProduct && (
+        <AddStockModal
+          product={addingStockProduct}
+          onClose={() => setAddingStockProduct(null)}
+          onSaved={() => {
+            setAddingStockProduct(null);
+            loadData();
           }}
         />
       )}
@@ -187,8 +220,8 @@ export default function InventoryPage() {
         <CategoryFormModal
           onClose={() => setShowCategoryModal(false)}
           onSaved={() => {
-            setShowCategoryModal(false)
-            loadData()
+            setShowCategoryModal(false);
+            loadData();
           }}
         />
       )}
@@ -203,5 +236,5 @@ export default function InventoryPage() {
         />
       )}
     </>
-  )
+  );
 }

@@ -74,6 +74,7 @@ export default function ProductSearch({
       code: product.code,
       unit: product.unit,
       unit_price: product.unit_price,
+      selling_price: product.unit_price,
       quantity: 1,
       available_stock: product.quantity,
     })

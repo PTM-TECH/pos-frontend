@@ -5,7 +5,11 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { LogOut, Shield, Menu, X } from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
-import { getMainNavItems, getSuperAdminNavItems } from "@/lib/navigation";
+import {
+  getMainNavItems,
+  getSuperAdminNavItems,
+  getSuperAdminSidebarItems,
+} from "@/lib/navigation";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -16,6 +20,7 @@ export default function Sidebar() {
   const superAdminItems = getSuperAdminNavItems();
   const isSuperAdmin = member?.role === "super_admin";
   const [mobileOpen, setMobileOpen] = useState(false);
+  const superAdminSidebar = getSuperAdminSidebarItems();
 
   function handleLogout() {
     logout();
@@ -62,40 +67,50 @@ export default function Sidebar() {
       </div>
 
       <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-0.5">
-        {mainItems
-          .filter((item) => !item.group)
-          .map((item) => (
-            <NavLink key={item.href} item={item} />
-          ))}
-
-        {Array.from(
-          new Set(mainItems.filter((i) => i.group).map((i) => i.group)),
-        ).map((group) => (
-          <div key={group}>
-            <div className="pt-4 pb-1 px-3">
-              <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">
-                {group}
-              </p>
-            </div>
-            {mainItems
-              .filter((item) => item.group === group)
-              .map((item) => (
-                <NavLink key={item.href} item={item} />
-              ))}
-          </div>
-        ))}
-
-        {/* Super admin section */}
-        {isSuperAdmin && superAdminItems.length > 0 && (
+        {isSuperAdmin ? (
           <>
-            <div className="pt-4 pb-1 px-3">
+            <div className="pt-1 pb-1 px-3">
               <div className="flex items-center gap-1.5 text-[10px] font-semibold text-gray-400 uppercase tracking-widest">
                 <Shield className="w-3 h-3" />
                 Platform Admin
               </div>
             </div>
-            {superAdminItems.map((item) => (
+            {superAdminSidebar.platformAdmin.map((item) => (
               <NavLink key={item.href} item={item} />
+            ))}
+
+            <div className="pt-4 pb-1 px-3">
+              <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">
+                Business
+              </p>
+            </div>
+            {superAdminSidebar.business.map((item) => (
+              <NavLink key={item.href} item={item} />
+            ))}
+          </>
+        ) : (
+          <>
+            {mainItems
+              .filter((item) => !item.group)
+              .map((item) => (
+                <NavLink key={item.href} item={item} />
+              ))}
+
+            {Array.from(
+              new Set(mainItems.filter((i) => i.group).map((i) => i.group)),
+            ).map((group) => (
+              <div key={group}>
+                <div className="pt-4 pb-1 px-3">
+                  <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">
+                    {group}
+                  </p>
+                </div>
+                {mainItems
+                  .filter((item) => item.group === group)
+                  .map((item) => (
+                    <NavLink key={item.href} item={item} />
+                  ))}
+              </div>
             ))}
           </>
         )}
