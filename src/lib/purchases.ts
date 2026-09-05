@@ -52,6 +52,13 @@ export async function receivePurchase(id: number) {
   return response.data.data
 }
 
+export async function recordPurchasePayment(purchaseId: number, amount: number) {
+  const response = await api.patch(`/purchases/${purchaseId}/record-payment`, null, {
+    params: { amount },
+  })
+  return response.data.data
+}
+
 export async function cancelPurchase(id: number) {
   const response = await api.patch<ApiResponse<Purchase>>(
     `/purchases/${id}/cancel`

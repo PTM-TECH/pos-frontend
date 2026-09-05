@@ -90,8 +90,10 @@ function LoginForm() {
       const roleName = data.member.role;
       if (roleName === "cashier" || roleName === "sales") {
         router.push("/new-sale");
+      } else if(roleName === 'super_admin') {
+        router.push("/super-admin/dashboard")
       } else {
-        router.push("/dashboard");
+        router.push('/dashboard')
       }
     } catch (err: any) {
       const message = err.response?.data?.message || "Invalid or expired code";

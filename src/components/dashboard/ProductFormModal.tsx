@@ -1,16 +1,21 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import { ScanLine, Image as ImageIcon, Upload } from 'lucide-react'
-import QRScannerModal from '../pos/QRScannerModal'
-import Modal from '@/components/ui/Modal'
-import { Category, Product } from '@/types'
-import { createProduct, updateProduct, uploadProductImage } from '@/lib/inventory'
-import { useAuthStore } from '@/store/authStore'
-import toast from 'react-hot-toast'
-import { getErrorMessage } from '@/lib/utils'
+import { useState, useEffect } from "react";
+import { ScanLine, Image as ImageIcon, Upload } from "lucide-react";
+import QRScannerModal from "../pos/QRScannerModal";
+import Modal from "@/components/ui/Modal";
+import { Category, Product, Vendor } from "@/types";
+import {
+  createProduct,
+  updateProduct,
+  uploadProductImage,
+} from "@/lib/inventory";
+import { getVendors } from "@/lib/vendors";
+import { useAuthStore } from "@/store/authStore";
+import toast from "react-hot-toast";
+import { getErrorMessage } from "@/lib/utils";
 import { selectOnFocus } from "@/lib/formHelpers";
-import { useEffectiveStoreId } from '@/lib/useEffectiveStoreId'
+import { useEffectiveStoreId } from "@/lib/useEffectiveStoreId";
 
 export default function ProductFormModal({
   product,
@@ -18,121 +23,148 @@ export default function ProductFormModal({
   onClose,
   onSaved,
 }: {
-  product?: Product | null
-  categories: Category[]
-  onClose: () => void
-  onSaved: () => void
+  product?: Product | null;
+  categories: Category[];
+  onClose: () => void;
+  onSaved: () => void;
 }) {
-  const storeId = useEffectiveStoreId()
-  const member = useAuthStore((state) => state.member)
-  const isEdit = !!product
-  const [name, setName] = useState(product?.name ?? '')
-  const [description, setDescription] = useState(product?.description ?? '')
-  const [code, setCode] = useState(product?.code ?? '')
-  const [unitPrice, setUnitPrice] = useState(product?.unit_price ?? 0)
-  const [unit, setUnit] = useState(product?.unit ?? 'Pieces')
-  const [quantity, setQuantity] = useState(product?.quantity ?? 0)
-  const [categoryId, setCategoryId] = useState<number | ''>('')
-  const [loading, setLoading] = useState(false)
-  const [showScanner, setShowScanner] = useState(false)
-  const [productImage, setProductImage] = useState(product?.image ?? null)
-  const [uploadingImage, setUploadingImage] = useState(false)
-  const [pendingImageFile, setPendingImageFile] = useState<File | null>(null)
-  const [pendingImagePreview, setPendingImagePreview] = useState<string | null>(null)
+  const storeId = useEffectiveStoreId();
+  const member = useAuthStore((state) => state.member);
+  const isEdit = !!product;
+  const [name, setName] = useState(product?.name ?? "");
+  const [description, setDescription] = useState(product?.description ?? "");
+  const [code, setCode] = useState(product?.code ?? "");
+  const [unitPrice, setUnitPrice] = useState(product?.unit_price ?? 0);
+  const [unit, setUnit] = useState(product?.unit ?? "Pieces");
+  const [quantity, setQuantity] = useState(product?.quantity ?? 0);
+  const [categoryId, setCategoryId] = useState<number | "">("");
+  const [loading, setLoading] = useState(false);
+  const [showScanner, setShowScanner] = useState(false);
+  const [productImage, setProductImage] = useState(product?.image ?? null);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [pendingImageFile, setPendingImageFile] = useState<File | null>(null);
+  const [pendingImagePreview, setPendingImagePreview] = useState<string | null>(
+    null,
+  );
+  const [initialQuantity, setInitialQuantity] = useState(0);
+  const [costPrice, setCostPrice] = useState(0);
+  const [purchaseTitle, setPurchaseTitle] = useState("");
+  const [vendorId, setVendorId] = useState<number | "">("");
+  const [vendors, setVendors] = useState<Vendor[]>([]);
+
+  useEffect(() => {
+    getVendors()
+      .then(setVendors)
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     if (product?.category) {
-      const match = categories.find((c) => c.name === product.category)
-      if (match) setCategoryId(match.id)
+      const match = categories.find((c) => c.name === product.category);
+      if (match) setCategoryId(match.id);
     }
-  }, [product, categories])
+  }, [product, categories]);
 
   async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0]
-    if (!file || !product) return
+    const file = e.target.files?.[0];
+    if (!file || !product) return;
 
     if (file.size > 3 * 1024 * 1024) {
-      toast.error('Image must be under 3MB')
-      return
+      toast.error("Image must be under 3MB");
+      return;
     }
 
-    setUploadingImage(true)
+    setUploadingImage(true);
     try {
-      const updated = await uploadProductImage(product.id, file)
-      setProductImage(updated.image)
-      toast.success('Product image updated')
+      const updated = await uploadProductImage(product.id, file);
+      setProductImage(updated.image);
+      toast.success("Product image updated");
     } catch (err: any) {
-      toast.error(getErrorMessage(err))
+      toast.error(getErrorMessage(err));
     } finally {
-      setUploadingImage(false)
+      setUploadingImage(false);
     }
   }
 
   function handlePendingImageSelect(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0]
-    if (!file) return
+    const file = e.target.files?.[0];
+    if (!file) return;
 
     if (file.size > 3 * 1024 * 1024) {
-      toast.error('Image must be under 3MB')
-      return
+      toast.error("Image must be under 3MB");
+      return;
     }
 
-    setPendingImageFile(file)
-    setPendingImagePreview(URL.createObjectURL(file))
+    setPendingImageFile(file);
+    setPendingImagePreview(URL.createObjectURL(file));
   }
 
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
+    e.preventDefault();
 
     if (!name.trim() || unitPrice <= 0) {
-      toast.error('Please fill in product name and a valid price')
-      return
+      toast.error("Please fill in product name and a valid price");
+      return;
     }
 
-    setLoading(true)
+    setLoading(true);
     try {
       if (isEdit && product) {
         await updateProduct(product.id, {
-        category_id: categoryId === '' ? null : categoryId,
-        name,
-        description,
-        code,
-        unit_price: unitPrice,
-        unit,
-      })
-      toast.success('Product updated successfully')
+          category_id: categoryId === "" ? null : categoryId,
+          name,
+          description,
+          code,
+          unit_price: unitPrice,
+          unit,
+        });
+        toast.success("Product updated successfully");
       } else {
+        if (initialQuantity > 0 && !purchaseTitle.trim()) {
+          toast.error("Please enter a purchase title for the initial stock");
+          return;
+        }
+
         const newProduct = await createProduct({
-        store_id: storeId ?? 1,
-        category_id: categoryId === '' ? null : categoryId,
-        name,
-        description,
-        code,
-        unit_price: unitPrice,
-        unit,
-        quantity: 0,
-        })
+          store_id: storeId ?? 1,
+          category_id: categoryId === "" ? null : categoryId,
+          name,
+          description,
+          code,
+          unit_price: unitPrice,
+          unit,
+          ...(initialQuantity > 0
+            ? {
+                initial_quantity: initialQuantity,
+                cost_price: costPrice,
+                purchase_title: purchaseTitle,
+                vendor_id: vendorId === "" ? null : vendorId,
+              }
+            : {}),
+        });
 
         if (pendingImageFile) {
           try {
-            await uploadProductImage(newProduct.id, pendingImageFile)
+            await uploadProductImage(newProduct.id, pendingImageFile);
           } catch {
-            toast.error('Product saved, but the image failed to upload. You can add it later by editing the product.')
+            toast.error(
+              "Product saved, but the image failed to upload. You can add it later by editing the product.",
+            );
           }
         }
 
-        toast.success('Product added successfully')
+        toast.success("Product added successfully");
       }
-      onSaved()
+      onSaved();
     } catch (err: any) {
-      toast.error(getErrorMessage(err))
+      toast.error(getErrorMessage(err));
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
   return (
-    <Modal title={isEdit ? 'Edit Product' : 'Add Product'} onClose={onClose}>
+    <Modal title={isEdit ? "Edit Product" : "Add Product"} onClose={onClose}>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1.5">
@@ -155,17 +187,31 @@ export default function ProductFormModal({
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 rounded-lg bg-gray-50 border border-gray-200 flex items-center justify-center overflow-hidden shrink-0">
               {isEdit && productImage ? (
-                <img src={productImage} alt="Product" className="w-full h-full object-cover" />
+                <img
+                  src={productImage}
+                  alt="Product"
+                  className="w-full h-full object-cover"
+                />
               ) : pendingImagePreview ? (
-                <img src={pendingImagePreview} alt="Selected" className="w-full h-full object-cover" />
+                <img
+                  src={pendingImagePreview}
+                  alt="Selected"
+                  className="w-full h-full object-cover"
+                />
               ) : (
                 <ImageIcon className="w-6 h-6 text-gray-300" />
               )}
             </div>
-            <label className="flex items-center gap-2 border border-gray-200 text-gray-700 px-3.5 py-2
-                               rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors cursor-pointer">
+            <label
+              className="flex items-center gap-2 border border-gray-200 text-gray-700 px-3.5 py-2
+                               rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors cursor-pointer"
+            >
               <Upload className="w-4 h-4" />
-              {uploadingImage ? 'Uploading...' : isEdit ? 'Change photo' : 'Select photo'}
+              {uploadingImage
+                ? "Uploading..."
+                : isEdit
+                  ? "Change photo"
+                  : "Select photo"}
               <input
                 type="file"
                 accept="image/png,image/jpeg,image/webp"
@@ -228,7 +274,9 @@ export default function ProductFormModal({
             <select
               value={categoryId}
               onChange={(e) =>
-                setCategoryId(e.target.value === '' ? '' : Number(e.target.value))
+                setCategoryId(
+                  e.target.value === "" ? "" : Number(e.target.value),
+                )
               }
               className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm
                          focus:outline-none focus:ring-2 focus:ring-emerald-500"
@@ -243,7 +291,7 @@ export default function ProductFormModal({
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1.5">
               Unit Price (Sell) <span className="text-red-500">*</span>
@@ -272,20 +320,85 @@ export default function ProductFormModal({
                          focus:outline-none focus:ring-2 focus:ring-emerald-500"
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">
-              Quantity
-            </label>
-            <input
-              type="number"
-              min={0}
-              value={quantity}
-              disabled
-              className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm bg-gray-50 text-gray-400"
-            />
-            <p className="text-xs text-gray-400 mt-1">Add stock via Purchases</p>
-          </div>
         </div>
+
+        {!isEdit && (
+          <div className="border border-gray-200 rounded-lg p-4 space-y-3 bg-gray-50">
+            <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
+              Initial Stock (optional)
+            </p>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                  Quantity
+                </label>
+                <input
+                  type="number"
+                  min={0}
+                  value={initialQuantity}
+                  onFocus={selectOnFocus}
+                  onChange={(e) => setInitialQuantity(Number(e.target.value))}
+                  className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm
+                             focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                  Cost Price (Buy)
+                </label>
+                <input
+                  type="number"
+                  min={0}
+                  value={costPrice}
+                  onFocus={selectOnFocus}
+                  onChange={(e) => setCostPrice(Number(e.target.value))}
+                  className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm
+                             focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                />
+              </div>
+            </div>
+            {initialQuantity > 0 && (
+              <>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                    Purchase Title <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required={initialQuantity > 0}
+                    value={purchaseTitle}
+                    onChange={(e) => setPurchaseTitle(e.target.value)}
+                    placeholder="e.g. Initial stock — August"
+                    className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm
+                               focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                    Vendor <span className="text-gray-400">(optional)</span>
+                  </label>
+                  <select
+                    value={vendorId}
+                    onChange={(e) =>
+                      setVendorId(
+                        e.target.value === "" ? "" : Number(e.target.value),
+                      )
+                    }
+                    className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm
+                               focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  >
+                    <option value="">None</option>
+                    {vendors.map((v) => (
+                      <option key={v.id} value={v.id}>
+                        {v.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </>
+            )}
+          </div>
+        )}
 
         <button
           type="submit"
@@ -293,19 +406,19 @@ export default function ProductFormModal({
           className="w-full bg-emerald-600 text-white py-2.5 rounded-lg text-sm font-medium
                      hover:bg-emerald-700 transition-colors disabled:opacity-60 mt-2"
         >
-          {loading ? 'Saving...' : isEdit ? 'Update Product' : 'Add Product'}
+          {loading ? "Saving..." : isEdit ? "Update Product" : "Add Product"}
         </button>
       </form>
 
       {showScanner && (
         <QRScannerModal
           onScan={(scannedCode) => {
-            setCode(scannedCode)
-            setShowScanner(false)
+            setCode(scannedCode);
+            setShowScanner(false);
           }}
           onClose={() => setShowScanner(false)}
         />
       )}
     </Modal>
-  )
+  );
 }

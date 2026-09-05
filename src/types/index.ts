@@ -78,6 +78,7 @@ export interface SaleItem {
   unit: string | null
   quantity: number
   unit_price: number
+  original_unit_price: number
   subtotal: number
   returned_quantity: number
 }
@@ -106,6 +107,7 @@ export interface CartItem {
   code: string | null
   unit: string | null
   unit_price: number
+  selling_price: number
   quantity: number
   available_stock: number
 }
@@ -184,6 +186,7 @@ export interface SaleReturn {
   quantity: number
   refund_amount: number
   reason: string | null
+  restocked: boolean
   processed_by: string | null
   created_at: string
 }

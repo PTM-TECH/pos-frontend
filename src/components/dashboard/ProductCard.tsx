@@ -1,5 +1,5 @@
 
-import { Package, Pencil, Trash2, SlidersHorizontal, Power, PowerOff } from 'lucide-react'
+import { Package, Pencil, Trash2, SlidersHorizontal, Power, PowerOff, PackagePlus } from 'lucide-react'
 import { Product } from '@/types'
 import { formatCurrency, getStatusColor, getStatusLabel } from '@/lib/utils'
 
@@ -8,12 +8,14 @@ export default function ProductCard({
   onEdit,
   onDelete,
   onAdjustStock,
+  onAddStock,
   onToggleActive,
 }: {
   product: Product
   onEdit: () => void
   onDelete: () => void
   onAdjustStock: () => void
+  onAddStock: () => void
   onToggleActive: () => void
 }) {
   return (
@@ -79,6 +81,14 @@ export default function ProductCard({
           title="Adjust stock"
         >
           <SlidersHorizontal className="w-3.5 h-3.5" />
+        </button>
+        <button
+          onClick={onAddStock}
+          className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center
+                     text-gray-500 hover:bg-emerald-50 hover:text-emerald-600"
+          title="Add stock"
+        >
+          <PackagePlus className="w-3.5 h-3.5" />
         </button>
         <button
           onClick={onToggleActive}

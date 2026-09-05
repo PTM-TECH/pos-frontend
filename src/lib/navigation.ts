@@ -159,6 +159,13 @@ export const navItems: NavItem[] = [
   },
   // SUPER ADMIN
   {
+    label: 'Dashboard',
+    href: '/super-admin/dashboard',
+    icon: LayoutDashboard,
+    roles: ['super_admin'],
+    section: 'super-admin',
+  },
+  {
     label: "Tenants",
     href: "/super-admin/tenants",
     icon: Building2,
@@ -204,4 +211,11 @@ export function getMainNavItems(role: string | null): NavItem[] {
 
 export function getSuperAdminNavItems(): NavItem[] {
   return navItems.filter((item) => item.section === "super-admin");
+}
+
+export function getSuperAdminSidebarItems(): { platformAdmin: NavItem[]; business: NavItem[] } {
+  return {
+    platformAdmin: navItems.filter((item) => item.section === 'super-admin'),
+    business: navItems.filter((item) => item.label === 'Settings'),
+  }
 }

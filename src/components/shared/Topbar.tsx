@@ -11,12 +11,16 @@ import { Notification } from "@/types";
 import { formatDate } from "@/lib/utils";
 import StoreSwitcher from "./StoreSwitcher";
 import SyncStatusBadge from "./SyncStatusBadge";
+import { useAuthStore } from "@/store/authStore";
+import PlatformNotificationBell from "./PlatformNotificationBell";
 
 export default function Topbar({ title }: { title: string }) {
   const [unreadCount, setUnreadCount] = useState(0);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const member = useAuthStore((state) => state.member);
+  const isSuperAdmin = member?.role === "super_admin";
 
   async function fetchCount() {
     try {
@@ -75,17 +79,21 @@ export default function Topbar({ title }: { title: string }) {
         <SyncStatusBadge />
         <StoreSwitcher />
         <div className="relative" ref={dropdownRef}>
-          <button
-            onClick={handleBellClick}
-            className="relative w-9 h-9 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors"
-          >
-            <Bell className="w-5 h-5 text-gray-600" />
-            {unreadCount > 0 && (
-              <span className="absolute top-1 right-1 w-4.5 h-4.5 bg-red-500 text-white text-[10px] font-semibold rounded-full flex items-center justify-center">
-                {unreadCount > 9 ? "9+" : unreadCount}
-              </span>
-            )}
-          </button>
+          {isSuperAdmin ? (
+            <PlatformNotificationBell />
+          ) : (
+            <button
+              onClick={handleBellClick}
+              className="relative w-9 h-9 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors"
+            >
+              <Bell className="w-5 h-5 text-gray-600" />
+              {unreadCount > 0 && (
+                <span className="absolute top-1 right-1 w-4.5 h-4.5 bg-red-500 text-white text-[10px] font-semibold rounded-full flex items-center justify-center">
+                  {unreadCount > 9 ? "9+" : unreadCount}
+                </span>
+              )}
+            </button>
+          )}
 
           {open && (
             <div className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">

@@ -30,7 +30,7 @@ export default function Footer() {
             <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Support</p>
             <div className="space-y-2">
               <Link href="/login" className="block text-sm text-gray-500 hover:text-gray-300">Sign in</Link>
-              <a href="mailto:support@appealpos.co.ke" className="block text-sm text-gray-500 hover:text-gray-300">Contact us</a>
+              <a href="mailto:support@papopos.com" className="block text-sm text-gray-500 hover:text-gray-300">Contact us</a>
             </div>
           </div>
 

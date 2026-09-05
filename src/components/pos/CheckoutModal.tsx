@@ -30,7 +30,6 @@ export default function CheckoutModal({
 }) {
   const storeId = useEffectiveStoreId();
   const items = useCartStore((state) => state.items);
-  const discount = useCartStore((state) => state.discount);
   const clientId = useCartStore((state) => state.clientId);
   const getTotal = useCartStore((state) => state.getTotal);
   const clearCart = useCartStore((state) => state.clearCart);
@@ -78,12 +77,13 @@ export default function CheckoutModal({
       store_id: storeId,
       client_id: clientId,
       paid,
-      discount,
+      discount: 0,
       payment_method: paymentMethod,
       items: items.map((i) => ({
         product_id: i.product_id,
         quantity: i.quantity,
-        unit_price: i.unit_price,
+        unit_price: i.selling_price,
+        original_unit_price: i.unit_price
       })),
     }
 
