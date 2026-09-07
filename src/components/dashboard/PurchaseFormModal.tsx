@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, X } from "lucide-react";
 import Modal from "@/components/ui/Modal";
 import { Vendor, Product } from "@/types";
 import { createPurchase } from "@/lib/purchases";
@@ -42,6 +42,10 @@ export default function PurchaseFormModal({
   const [items, setItems] = useState<ItemRow[]>([
     { product_id: "", quantity: 1, cost_price: 0 },
   ]);
+  const [productSearchOpen, setProductSearchOpen] = useState<number | null>(
+    null,
+  );
+  const [productSearchQuery, setProductSearchQuery] = useState("");
   const [loading, setLoading] = useState(false);
 
   const isFormValid =
@@ -237,25 +241,83 @@ export default function PurchaseFormModal({
             <div className="space-y-2">
               {items.map((item, index) => (
                 <div key={index} className="flex items-center gap-2">
-                  <select
-                    value={item.product_id}
-                    onChange={(e) =>
-                      updateRow(
-                        index,
-                        "product_id",
-                        e.target.value === "" ? "" : Number(e.target.value),
-                      )
-                    }
-                    className="flex-1 px-2.5 py-2 border border-gray-300 rounded-lg text-sm
-                             focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  >
-                    <option value="">Select product</option>
-                    {products.map((p) => (
-                      <option key={p.id} value={p.id}>
-                        {p.name}
-                      </option>
-                    ))}
-                  </select>
+                  <div className="relative flex-1">
+                    {item.product_id !== "" ? (
+                      <div className="flex items-center justify-between px-2.5 py-2 border border-gray-200 rounded-lg bg-gray-50 text-sm">
+                        <span className="truncate">
+                          {products.find((p) => p.id === item.product_id)
+                            ?.name ?? "Unknown product"}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => updateRow(index, "product_id", "")}
+                          className="text-gray-400 hover:text-red-500 shrink-0 ml-2"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    ) : (
+                      <>
+                        <input
+                          type="text"
+                          value={
+                            productSearchOpen === index
+                              ? productSearchQuery
+                              : ""
+                          }
+                          onFocus={() => {
+                            setProductSearchOpen(index);
+                            setProductSearchQuery("");
+                          }}
+                          onChange={(e) =>
+                            setProductSearchQuery(e.target.value)
+                          }
+                          placeholder="Search product..."
+                          className="w-full px-2.5 py-2 border border-gray-300 rounded-lg text-sm
+                                    focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                        />
+                        {productSearchOpen === index && (
+                          <div className="absolute z-20 mt-1 w-full bg-white rounded-lg shadow-lg border border-gray-200 max-h-48 overflow-y-auto">
+                            {products
+                              .filter((p) =>
+                                p.name
+                                  .toLowerCase()
+                                  .includes(productSearchQuery.toLowerCase()),
+                              )
+                              .slice(0, 20)
+                              .map((p) => (
+                                <button
+                                  key={p.id}
+                                  type="button"
+                                  onClick={() => {
+                                    updateRow(index, "product_id", p.id);
+                                    setProductSearchOpen(null);
+                                    setProductSearchQuery("");
+                                  }}
+                                  className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 border-b border-gray-50 last:border-0"
+                                >
+                                  {p.name}
+                                  {p.code && (
+                                    <span className="text-xs text-gray-400 ml-2">
+                                      {p.code}
+                                    </span>
+                                  )}
+                                </button>
+                              ))}
+                            {products.filter((p) =>
+                              p.name
+                                .toLowerCase()
+                                .includes(productSearchQuery.toLowerCase()),
+                            ).length === 0 && (
+                              <div className="p-3 text-center text-xs text-gray-400">
+                                No matching products
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </div>
                   <input
                     type="number"
                     min={1}
