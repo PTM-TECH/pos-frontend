@@ -234,6 +234,7 @@ export default function PurchasesPage() {
           <StatCard
             label="Paid to Vendors"
             value={formatCurrency(totalPaidToVendors)}
+            isCurrency
             icon={Wallet}
             iconColor="#10b981"
             iconBg="#ecfdf5"
@@ -241,6 +242,7 @@ export default function PurchasesPage() {
           <StatCard
             label="Outstanding to Vendors"
             value={formatCurrency(totalOutstanding)}
+            isCurrency
             icon={AlertCircle}
             iconColor="#ef4444"
             iconBg="#fef2f2"

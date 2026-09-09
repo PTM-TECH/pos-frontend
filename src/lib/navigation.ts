@@ -52,8 +52,16 @@ export const navItems: NavItem[] = [
     group: "Operations",
   },
   {
-    label: "Returns",
+    label: "Sale Returns",
     href: "/returns",
+    icon: RotateCcw,
+    roles: ["owner", "admin"],
+    section: "main",
+    group: "Operations",
+  },
+  {
+    label: "Vendor Returns",
+    href: "/vendor-returns",
     icon: RotateCcw,
     roles: ["owner", "admin"],
     section: "main",
@@ -159,11 +167,11 @@ export const navItems: NavItem[] = [
   },
   // SUPER ADMIN
   {
-    label: 'Dashboard',
-    href: '/super-admin/dashboard',
+    label: "Dashboard",
+    href: "/super-admin/dashboard",
     icon: LayoutDashboard,
-    roles: ['super_admin'],
-    section: 'super-admin',
+    roles: ["super_admin"],
+    section: "super-admin",
   },
   {
     label: "Tenants",
@@ -213,9 +221,12 @@ export function getSuperAdminNavItems(): NavItem[] {
   return navItems.filter((item) => item.section === "super-admin");
 }
 
-export function getSuperAdminSidebarItems(): { platformAdmin: NavItem[]; business: NavItem[] } {
+export function getSuperAdminSidebarItems(): {
+  platformAdmin: NavItem[];
+  business: NavItem[];
+} {
   return {
-    platformAdmin: navItems.filter((item) => item.section === 'super-admin'),
-    business: navItems.filter((item) => item.label === 'Settings'),
-  }
+    platformAdmin: navItems.filter((item) => item.section === "super-admin"),
+    business: navItems.filter((item) => item.label === "Settings"),
+  };
 }

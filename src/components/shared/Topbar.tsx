@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { Bell, AlertTriangle } from "lucide-react";
+import PrivacyToggle from "./PrivacyToggle";
 import {
   getUnreadCount,
   getNotifications,
@@ -77,6 +78,7 @@ export default function Topbar({ title }: { title: string }) {
       <h1 className="text-lg font-semibold text-gray-900">{title}</h1>
       <div className="flex items-center gap-3">
         <SyncStatusBadge />
+        <PrivacyToggle />
         <StoreSwitcher />
         <div className="relative" ref={dropdownRef}>
           {isSuperAdmin ? (
