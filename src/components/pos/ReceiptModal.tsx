@@ -6,7 +6,12 @@ import { X, Printer, RotateCcw } from "lucide-react";
 import { Sale, SaleItem } from "@/types";
 import ReturnItemModal from "./ReturnItemModal";
 import { recordPayment } from "@/lib/sales";
-import { formatCurrency, formatDate, getAssetUrl, getErrorMessage } from "@/lib/utils";
+import {
+  formatCurrency,
+  formatDate,
+  getAssetUrl,
+  getErrorMessage,
+} from "@/lib/utils";
 
 function ConfirmCreditPaymentForm({
   sale,
@@ -67,7 +72,6 @@ export default function ReceiptModal({
   const receiptRef = useRef<HTMLDivElement>(null);
   const [returningItem, setReturningItem] = useState<SaleItem | null>(null);
 
-  
   function handlePrint() {
     const printContent = receiptRef.current?.innerHTML;
     if (!printContent) return;
@@ -109,7 +113,7 @@ export default function ReceiptModal({
       <div className="bg-white rounded-2xl w-full max-w-sm max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
           <h2 className="text-base font-semibold text-gray-900">
-            {sale.payment_method === 'credit' ? 'Invoice' : 'Receipt'}
+            {sale.payment_method === "credit" ? "Invoice" : "Receipt"}
           </h2>
           <button
             onClick={onClose}
@@ -136,14 +140,18 @@ export default function ReceiptModal({
               />
             )}
             <p className="bold text-base">
-              {sale.business_name ?? (sale.payment_method === 'credit' ? 'INVOICE' : 'SALES RECEIPT')}
+              {sale.business_name ??
+                (sale.payment_method === "credit"
+                  ? "INVOICE"
+                  : "SALES RECEIPT")}
             </p>
-            {sale.payment_method === 'credit' && (
+            {sale.payment_method === "credit" && (
               <p className="bold" style={{ fontSize: 11, marginTop: 2 }}>
                 CREDIT INVOICE | PAYMENT DUE
               </p>
             )}
             <p>{sale.store}</p>
+            {sale.business_location && <p>{sale.business_location}</p>}
             {sale.business_phone && <p>{sale.business_phone}</p>}
             <p>{formatDate(sale.created_at)}</p>
           </div>
@@ -162,7 +170,9 @@ export default function ReceiptModal({
           </div>
           <div className="row">
             <span>Payment: </span>
-            <span className="capitalize">{sale.payment_method === 'mpesa' ? 'M-Pesa' : sale.payment_method}</span>
+            <span className="capitalize">
+              {sale.payment_method === "mpesa" ? "M-Pesa" : sale.payment_method}
+            </span>
           </div>
           <hr />
           {sale.items.map((item) => (
@@ -200,19 +210,22 @@ export default function ReceiptModal({
             <span>{formatCurrency(sale.balance)}</span>
           </div>
           <hr />
-          {sale.payment_method === 'credit' ? (
+          {sale.payment_method === "credit" ? (
             <p className="center bold">
               Amount Due: {formatCurrency(sale.balance)}
             </p>
           ) : (
             <p className="center">Thank you for shopping with us!</p>
           )}
-          <div className="center" style={{ marginTop: 12, fontSize: 10, color: '#888' }}>
+          <div
+            className="center"
+            style={{ marginTop: 12, fontSize: 10, color: "#888" }}
+          >
             <p>Software Developed by: Pawatech Systems</p>
             <p>Call/Whatsapp: +254795310021</p>
           </div>
         </div>
-        
+
         {sale.payment_method === "credit" && sale.balance > 0 && (
           <div className="px-6 pb-4">
             <ConfirmCreditPaymentForm
@@ -247,7 +260,9 @@ export default function ReceiptModal({
             className="w-full flex items-center justify-center gap-2 bg-gray-900 text-white py-3 rounded-xl text-sm font-medium hover:bg-gray-800 transition-colors"
           >
             <Printer className="w-4 h-4" />
-            {sale.payment_method === 'credit' ? 'Print Invoice' : 'Print Receipt'}
+            {sale.payment_method === "credit"
+              ? "Print Invoice"
+              : "Print Receipt"}
           </button>
         </div>
       </div>

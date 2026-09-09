@@ -91,6 +91,7 @@ export interface Sale {
   business_name: string | null
   business_logo: string | null
   business_phone: string | null
+  business_location: string | null
   total: number
   paid: number
   balance: number
@@ -247,6 +248,7 @@ export interface TenantWithSubscription {
   phone: string | null
   status: string
   logo_url: string | null
+  location: string | null
   created_at: string
   subscription: TenantSubscription | null
 }

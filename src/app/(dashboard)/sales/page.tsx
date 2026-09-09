@@ -221,6 +221,7 @@ export default function SalesPage() {
           <StatCard
             label="Cash Sales"
             value={formatCurrency(totalCash)}
+            isCurrency
             icon={Wallet}
             iconColor="#10b981"
             iconBg="#ecfdf5"
@@ -228,6 +229,7 @@ export default function SalesPage() {
           <StatCard
             label="M-Pesa Sales"
             value={formatCurrency(totalMpesa)}
+            isCurrency
             icon={Smartphone}
             iconColor="#3b82f6"
             iconBg="#eff6ff"
@@ -235,6 +237,7 @@ export default function SalesPage() {
           <StatCard
             label="Credit Sales"
             value={formatCurrency(totalCredit)}
+            isCurrency
             icon={FileText}
             iconColor="#f59e0b"
             iconBg="#fffbeb"
@@ -242,6 +245,7 @@ export default function SalesPage() {
           <StatCard
             label="Credit Outstanding"
             value={formatCurrency(creditOutstanding)}
+            isCurrency
             icon={AlertCircle}
             iconColor="#ef4444"
             iconBg="#fef2f2"
@@ -249,6 +253,7 @@ export default function SalesPage() {
           <StatCard
             label="Total Discount"
             value={formatCurrency(totalDiscount)}
+            isCurrency
             icon={Tag}
             iconColor="#ef4444"
             iconBg="#fef2f2"

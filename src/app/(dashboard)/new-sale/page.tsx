@@ -152,7 +152,13 @@ export default function POSPage() {
             <CartPanel />
           </div>
           <button
-            onClick={() => setShowCheckout(true)}
+            onClick={() => {
+              if(!storeId){
+                toast.error('Please select a specific store before proceeding to checkout')
+                return
+              }
+              setShowCheckout(true)
+            }}
             disabled={items.length === 0}
             className="w-full bg-emerald-600 text-white py-3.5 rounded-xl text-sm font-semibold hover:bg-emerald-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >

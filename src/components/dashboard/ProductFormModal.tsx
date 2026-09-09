@@ -368,7 +368,7 @@ export default function ProductFormModal({
                     required={initialQuantity > 0}
                     value={purchaseTitle}
                     onChange={(e) => setPurchaseTitle(e.target.value)}
-                    placeholder="e.g. Initial stock — August"
+                    placeholder="e.g. Initial stock, August"
                     className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm
                                focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   />

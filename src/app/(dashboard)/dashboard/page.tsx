@@ -101,6 +101,7 @@ export default function DashboardPage() {
           <StatCard
             label="Total Paid"
             value={stats ? formatCurrency(stats.total_paid) : '—'}
+            isCurrency
             icon={Wallet}
             iconColor="#10b981"
             iconBg="#ecfdf5"
@@ -115,6 +116,7 @@ export default function DashboardPage() {
           <StatCard
             label="Balance"
             value={stats ? formatCurrency(stats.total_balance) : '—'}
+            isCurrency
             icon={Scale}
             iconColor="#f59e0b"
             iconBg="#fffbeb"
@@ -126,6 +128,7 @@ export default function DashboardPage() {
           <StatCard
             label="Gross Profit"
             value={stats ? formatCurrency(stats.gross_profit) : '—'}
+            isCurrency
             icon={TrendingUp}
             iconColor="#10b981"
             iconBg="#ecfdf5"
@@ -133,6 +136,7 @@ export default function DashboardPage() {
           <StatCard
             label="Total Expenses"
             value={stats ? formatCurrency(stats.total_expenses) : '—'}
+            isCurrency
             icon={Wallet}
             iconColor="#ef4444"
             iconBg="#fef2f2"
@@ -140,6 +144,7 @@ export default function DashboardPage() {
           <StatCard
             label="Net Profit"
             value={stats ? formatCurrency(stats.net_profit) : '—'}
+            isCurrency
             icon={Scale}
             iconColor={stats && stats.net_profit < 0 ? '#ef4444' : '#10b981'}
             iconBg={stats && stats.net_profit < 0 ? '#fef2f2' : '#ecfdf5'}

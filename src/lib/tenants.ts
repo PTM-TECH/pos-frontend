@@ -91,3 +91,16 @@ export async function getPlatformStats() {
   );
   return response.data.data;
 }
+
+export async function updateBusinessDetails(payload: { location?: string; phone?: string }) {
+  const response = await api.patch<ApiResponse<TenantWithSubscription>>(
+    '/tenants/me/business-details',
+    payload
+  )
+  return response.data.data
+}
+
+export async function resetTenantData(id: number) {
+  const response = await api.post<ApiResponse<TenantWithSubscription>>(`/tenants/${id}/reset-data`)
+  return response.data.data
+}

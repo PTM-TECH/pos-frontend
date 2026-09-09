@@ -107,6 +107,7 @@ export default function ReturnsPage() {
           <StatCard
             label="Total Refunded"
             value={summary ? formatCurrency(summary.total_refund_amount) : "—"}
+            isCurrency
             icon={Wallet}
             iconColor="#ef4444"
             iconBg="#fef2f2"
