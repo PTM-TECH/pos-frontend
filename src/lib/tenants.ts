@@ -104,3 +104,8 @@ export async function resetTenantData(id: number) {
   const response = await api.post<ApiResponse<TenantWithSubscription>>(`/tenants/${id}/reset-data`)
   return response.data.data
 }
+
+export async function deleteTenant(id: number) {
+  const response = await api.delete(`/tenants/${id}`)
+  return response.data
+}

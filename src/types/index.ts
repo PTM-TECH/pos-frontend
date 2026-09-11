@@ -48,6 +48,7 @@ export interface Product {
   status: 'in_stock' | 'low_stock' | 'out_of_stock'
   image: string | null
   is_active: boolean
+  matched_field: 'description' | null
   created_at: string
 }
 
