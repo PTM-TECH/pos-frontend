@@ -1,91 +1,107 @@
 // src/lib/utils.ts
 
 function toUUtcDate(dateString: string): Date {
-  const hasTimezone = /Z$|[+-]\d{2}:\d{2}$/.test(dateString)
-  return new Date(hasTimezone ? dateString : `${dateString}Z`)
+  const hasTimezone = /Z$|[+-]\d{2}:\d{2}$/.test(dateString);
+  return new Date(hasTimezone ? dateString : `${dateString}Z`);
 }
 
 export function formatCurrency(amount: number): string {
-  return `KES ${amount.toLocaleString('en-KE', {
+  return `KES ${amount.toLocaleString("en-KE", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
-  })}`
+  })}`;
 }
 
 export function formatDate(dateString: string): string {
-  return toUUtcDate(dateString).toLocaleString('en-KE', {
-    timeZone: 'Africa/Nairobi',
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  })
+  return toUUtcDate(dateString).toLocaleString("en-KE", {
+    timeZone: "Africa/Nairobi",
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 }
 
 export function formatDateShort(dateString: string): string {
-  return toUUtcDate(dateString).toLocaleDateString('en-KE', {
-    timeZone: 'Africa/Nairobi',
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  })
+  return toUUtcDate(dateString).toLocaleDateString("en-KE", {
+    timeZone: "Africa/Nairobi",
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
 }
 
 export function getStatusColor(status: string): string {
   switch (status) {
-    case 'paid':
-    case 'received':
-    case 'in_stock':
-      return 'bg-emerald-50 text-emerald-700 border-emerald-200'
-    case 'partially_paid':
-    case 'partially_received':
-    case 'low_stock':
-      return 'bg-amber-50 text-amber-700 border-amber-200'
-    case 'pending':
-      return 'bg-gray-50 text-gray-700 border-gray-200'
-    case 'out_of_stock':
-    case 'cancelled':
-      return 'bg-red-50 text-red-700 border-red-200'
+    case "paid":
+    case "received":
+    case "in_stock":
+      return "bg-emerald-50 text-emerald-700 border-emerald-200";
+    case "partially_paid":
+    case "partially_received":
+    case "low_stock":
+      return "bg-amber-50 text-amber-700 border-amber-200";
+    case "pending":
+      return "bg-gray-50 text-gray-700 border-gray-200";
+    case "out_of_stock":
+    case "cancelled":
+      return "bg-red-50 text-red-700 border-red-200";
     default:
-      return 'bg-gray-50 text-gray-700 border-gray-200'
+      return "bg-gray-50 text-gray-700 border-gray-200";
   }
 }
 
 export function getStatusLabel(status: string): string {
   return status
-    .split('_')
+    .split("_")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ')
+    .join(" ");
 }
 
 export function getErrorMessage(err: any): string {
-  const message = err?.response?.data?.message
+  const message = err?.response?.data?.message;
 
-  if (typeof message === 'string') {
-    return message
+  if (typeof message === "string") {
+    return message;
   }
 
-  const detail = err?.response?.data?.detail
+  const detail = err?.response?.data?.detail;
   if (Array.isArray(detail) && detail.length > 0) {
-    return detail[0].msg || 'Invalid input'
+    return detail[0].msg || "Invalid input";
   }
 
-  if (message && typeof message === 'object') {
-    const firstKey = Object.keys(message)[0]
-    const firstError = message[firstKey]
+  if (message && typeof message === "object") {
+    const firstKey = Object.keys(message)[0];
+    const firstError = message[firstKey];
     if (Array.isArray(firstError)) {
-      return `${firstKey}: ${firstError[0]}`
+      return `${firstKey}: ${firstError[0]}`;
     }
-    return JSON.stringify(message)
+    return JSON.stringify(message);
   }
 
-  return 'Something went wrong. Please try again.'
+  return "Something went wrong. Please try again.";
 }
 
 export function getAssetUrl(path: string | null | undefined): string | null {
-  if (!path) return null
-  if (path.startsWith('http')) return path
-  const base = (process.env.NEXT_PUBLIC_API_URL ?? '').replace(/\/api\/?$/, '')
-  return `${base}${path}`
+  if (!path) return null;
+  if (path.startsWith("http")) return path;
+  const base = (process.env.NEXT_PUBLIC_API_URL ?? "").replace(/\/api\/?$/, "");
+  return `${base}${path}`;
+}
+
+export function getMatchSnippet(
+  text: string,
+  query: string,
+  contextChars = 30,
+): string {
+  const index = text.toLowerCase().indexOf(query.toLowerCase());
+  if (index === -1) return text.slice(0, 60);
+
+  const start = Math.max(0, index - contextChars);
+  const end = Math.min(text.length, index + query.length + contextChars);
+  const prefix = start > 0 ? "..." : "";
+  const suffix = end < text.length ? "..." : "";
+
+  return `${prefix}${text.slice(start, end)}${suffix}`;
 }

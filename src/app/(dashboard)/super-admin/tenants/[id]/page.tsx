@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import {
   Building2,
   CheckCircle2,
@@ -11,6 +12,7 @@ import {
 } from "lucide-react";
 import Topbar from "@/components/shared/Topbar";
 import ResetTenantDataDialog from "@/components/dashboard/ResetTenantDataDialog";
+import DeleteTenantDialog from "@/components/dashboard/DeleteTenantDialog";
 import api from "@/lib/api";
 import { formatCurrency, formatDate, getErrorMessage } from "@/lib/utils";
 import toast from "react-hot-toast";
@@ -38,6 +40,8 @@ export default function TenantDetailPage() {
 
   const [tenant, setTenant] = useState<TenantDetail | null>(null);
   const [showResetDialog, setShowResetDialog] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
 
   async function loadData() {
@@ -159,6 +163,13 @@ export default function TenantDetailPage() {
                 >
                   Reset Tenant Data
                 </button>
+                <button
+                  onClick={() => setShowDeleteDialog(true)}
+                  className="flex items-center gap-2 text-sm font-medium px-4 py-2.5 rounded-lg
+             bg-red-600 text-white hover:bg-red-700 transition-colors"
+                >
+                  Delete Tenant Permanently
+                </button>
               </div>
             </div>
 
@@ -222,6 +233,16 @@ export default function TenantDetailPage() {
           onReset={() => {
             setShowResetDialog(false);
             loadData();
+          }}
+        />
+      )}
+      {showDeleteDialog && tenant && (
+        <DeleteTenantDialog
+          tenantId={tenant.id}
+          tenantName={tenant.name}
+          onClose={() => setShowDeleteDialog(false)}
+          onDeleted={() => {
+            router.push("/super-admin/tenants");
           }}
         />
       )}

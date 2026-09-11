@@ -1,53 +1,57 @@
+"use client";
 
-'use client'
+import { useState, useEffect, useRef } from "react";
+import { Search, Package, X } from "lucide-react";
+import { searchProducts } from "@/lib/inventory";
+import { useCartStore } from "@/store/cartStore";
+import { Product } from "@/types";
+import {
+  formatCurrency,
+  getStatusColor,
+  getStatusLabel,
+  getMatchSnippet,
+} from "@/lib/utils";
+import toast from "react-hot-toast";
 
-import { useState, useEffect, useRef } from 'react'
-import { Search, Package, X } from 'lucide-react'
-import { searchProducts } from '@/lib/inventory'
-import { useCartStore } from '@/store/cartStore'
-import { Product } from '@/types'
-import { formatCurrency, getStatusColor, getStatusLabel } from '@/lib/utils'
-import toast from 'react-hot-toast'
-
-export default function ProductSearch({ 
-  storeId, 
-  onQueryChange, 
-}: { 
-  storeId?: number
-  onQueryChange?: (query: string) => void
+export default function ProductSearch({
+  storeId,
+  onQueryChange,
+}: {
+  storeId?: number;
+  onQueryChange?: (query: string) => void;
 }) {
-  const [query, setQuery] = useState('')
-  const [results, setResults] = useState<Product[]>([])
-  const [loading, setLoading] = useState(false)
-  const [showResults, setShowResults] = useState(false)
-  const wrapperRef = useRef<HTMLDivElement>(null)
-  const addItem = useCartStore((state) => state.addItem)
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [showResults, setShowResults] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const addItem = useCartStore((state) => state.addItem);
 
   useEffect(() => {
-    onQueryChange?.(query)
-  }, [query])
-  
+    onQueryChange?.(query);
+  }, [query]);
+
   useEffect(() => {
     if (query.trim().length < 2) {
-      setResults([])
-      return
+      setResults([]);
+      return;
     }
 
-    setLoading(true)
+    setLoading(true);
     const delay = setTimeout(async () => {
       try {
-        const data = await searchProducts(query, storeId)
-        setResults(data)
-        setShowResults(true)
+        const data = await searchProducts(query, storeId);
+        setResults(data);
+        setShowResults(true);
       } catch {
-        setResults([])
+        setResults([]);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }, 300)
+    }, 300);
 
-    return () => clearTimeout(delay)
-  }, [query, storeId])
+    return () => clearTimeout(delay);
+  }, [query, storeId]);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -55,17 +59,17 @@ export default function ProductSearch({
         wrapperRef.current &&
         !wrapperRef.current.contains(e.target as Node)
       ) {
-        setShowResults(false)
+        setShowResults(false);
       }
     }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   function handleSelect(product: Product) {
     if (product.quantity <= 0) {
-      toast.error(`${product.name} is out of stock`)
-      return
+      toast.error(`${product.name} is out of stock`);
+      return;
     }
 
     addItem({
@@ -77,11 +81,11 @@ export default function ProductSearch({
       selling_price: product.unit_price,
       quantity: 1,
       available_stock: product.quantity,
-    })
-    toast.success(`${product.name} added to cart`)
-    setQuery('')
-    setResults([])
-    setShowResults(false)
+    });
+    toast.success(`${product.name} added to cart`);
+    setQuery("");
+    setResults([]);
+    setShowResults(false);
   }
 
   return (
@@ -101,8 +105,8 @@ export default function ProductSearch({
         {query && (
           <button
             onClick={() => {
-              setQuery('')
-              setResults([])
+              setQuery("");
+              setResults([]);
             }}
             className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
           >
@@ -139,8 +143,16 @@ export default function ProductSearch({
                     {product.name}
                   </p>
                   <p className="text-xs text-gray-500">
-                    {product.code ?? '—'} · {product.quantity} {product.unit ?? 'units'} available
+                    {product.code ?? "—"} · {product.quantity}{" "}
+                    {product.unit ?? "units"} available
                   </p>
+                  {product.matched_field === "description" &&
+                    product.description && (
+                      <p className="text-xs text-emerald-600 mt-0.5 truncate">
+                        Matches: &quot;
+                        {getMatchSnippet(product.description, query)}&quot;
+                      </p>
+                    )}
                 </div>
                 <div className="text-right shrink-0">
                   <p className="text-sm font-semibold text-gray-900">
@@ -148,7 +160,7 @@ export default function ProductSearch({
                   </p>
                   <span
                     className={`text-[10px] font-medium px-1.5 py-0.5 rounded border ${getStatusColor(
-                      product.status
+                      product.status,
                     )}`}
                   >
                     {getStatusLabel(product.status)}
@@ -160,5 +172,5 @@ export default function ProductSearch({
         </div>
       )}
     </div>
-  )
+  );
 }
