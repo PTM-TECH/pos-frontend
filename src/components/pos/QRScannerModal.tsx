@@ -100,7 +100,7 @@ export default function QRScannerModal({
             <ScanLine className="w-4 h-4 text-emerald-600" />
             <h2 className="text-sm font-semibold text-gray-900">Scan product code</h2>
           </div>
-          <button onClick={handleClose} className="text-gray-400 hover:text-gray-600">
+          <button onClick={handleClose} className="cursor-pointer text-gray-400 hover:text-gray-600">
             <X className="w-5 h-5" />
           </button>
         </div>

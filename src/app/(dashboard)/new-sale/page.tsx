@@ -122,7 +122,7 @@ export default function POSPage() {
             <button
               onClick={() => setShowScanner(true)}
               className="flex items-center gap-2 border border-gray-200 text-gray-700 px-4 py-3.5
-                         rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors shrink-0"
+                         rounded-xl text-sm font-medium cursor-pointer hover:bg-gray-50 transition-colors shrink-0"
             >
               <ScanLine className="w-4 h-4" />
               Scan
@@ -160,7 +160,7 @@ export default function POSPage() {
               setShowCheckout(true)
             }}
             disabled={items.length === 0}
-            className="w-full bg-emerald-600 text-white py-3.5 rounded-xl text-sm font-semibold hover:bg-emerald-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full cursor-pointer bg-emerald-600 text-white py-3.5 rounded-xl text-sm font-semibold hover:bg-emerald-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Proceed to Checkout
           </button>

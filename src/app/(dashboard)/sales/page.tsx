@@ -205,7 +205,7 @@ export default function SalesPage() {
         <button
           onClick={() => setViewing(s)}
           className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center
-                     text-gray-500 hover:bg-gray-50"
+                     text-gray-500 hover:bg-gray-50 cursor-pointer"
         >
           <Eye className="w-3.5 h-3.5" />
         </button>
@@ -278,7 +278,7 @@ export default function SalesPage() {
             <button
               key={preset.value}
               onClick={() => setDatePreset(preset.value)}
-              className={`text-xs font-medium px-3 py-1.5 rounded-lg border transition-colors
+              className={`text-xs font-medium px-3 py-1.5 rounded-lg border transition-colors cursor-pointer
                 ${
                   datePreset === preset.value
                     ? "bg-emerald-50 text-emerald-700 border-emerald-200"
@@ -314,7 +314,7 @@ export default function SalesPage() {
             <button
               key={method}
               onClick={() => setPaymentFilter(method)}
-              className={`text-xs font-medium px-3 py-1.5 rounded-lg border transition-colors capitalize
+              className={`text-xs font-medium px-3 py-1.5 rounded-lg border transition-colors capitalize cursor-pointer
                 ${
                   paymentFilter === method
                     ? "bg-emerald-50 text-emerald-700 border-emerald-200"

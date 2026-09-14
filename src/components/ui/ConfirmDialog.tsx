@@ -29,7 +29,7 @@ export default function ConfirmDialog({
         <div className="flex gap-3">
           <button
             onClick={onCancel}
-            className="flex-1 py-2.5 rounded-lg text-sm font-medium border border-gray-200
+            className="flex-1 py-2.5 rounded-lg cursor-pointer text-sm font-medium border border-gray-200
                        text-gray-700 hover:bg-gray-50 transition-colors"
           >
             Cancel
@@ -38,7 +38,7 @@ export default function ConfirmDialog({
             onClick={onConfirm}
             disabled={loading}
             className="flex-1 py-2.5 rounded-lg text-sm font-medium bg-red-600 text-white
-                       hover:bg-red-700 transition-colors disabled:opacity-60"
+                       hover:bg-red-700 cursor-pointer transition-colors disabled:opacity-60"
           >
             {loading ? 'Deleting...' : 'Delete'}
           </button>

@@ -30,7 +30,7 @@ export default function ExportButton({
         onClick={() => setOpen(!open)}
         disabled={loading}
         className="flex items-center gap-2 border border-gray-200 text-gray-700 px-4 py-2.5
-                   rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors disabled:opacity-60"
+                   rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors disabled:opacity-60 cursor-pointer"
       >
         <Download className="w-4 h-4" />
         {loading ? 'Exporting...' : 'Export'}
@@ -41,14 +41,14 @@ export default function ExportButton({
           <div className="absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-lg border border-gray-200 z-20 overflow-hidden">
             <button
               onClick={() => handleExport('xlsx')}
-              className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50"
+              className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer"
             >
               <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
               Excel (.xlsx)
             </button>
             <button
               onClick={() => handleExport('pdf')}
-              className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50"
+              className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer"
             >
               <FileText className="w-4 h-4 text-red-600" />
               PDF

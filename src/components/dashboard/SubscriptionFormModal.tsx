@@ -78,7 +78,7 @@ export default function SubscriptionFormModal({
             value={memberId}
             onChange={(e) => setMemberId(Number(e.target.value))}
             className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm
-                       focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                       focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
           >
             <option value="">Select member</option>
             {members.map((m) => (
@@ -98,7 +98,7 @@ export default function SubscriptionFormModal({
               value={type}
               onChange={(e) => setType(e.target.value as any)}
               className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm
-                         focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                         focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
             >
               <option value="daily">Daily</option>
               <option value="weekly">Weekly</option>
@@ -124,7 +124,7 @@ export default function SubscriptionFormModal({
           type="submit"
           disabled={loading}
           className="w-full bg-emerald-600 text-white py-2.5 rounded-lg text-sm font-medium
-                     hover:bg-emerald-700 transition-colors disabled:opacity-60"
+                     hover:bg-emerald-700 transition-colors disabled:opacity-60 cursor-pointer"
         >
           {loading ? 'Creating...' : 'Create Subscription'}
         </button>

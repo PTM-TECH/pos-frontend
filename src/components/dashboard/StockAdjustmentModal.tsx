@@ -85,7 +85,7 @@ export default function StockAdjustmentModal({
             <button
               type="button"
               onClick={() => setType("decrease")}
-              className={`py-2.5 rounded-lg text-sm font-medium border transition-colors
+              className={`py-2.5 rounded-lg text-sm font-medium border cursor-pointer transition-colors
                 ${
                   type === "decrease"
                     ? "bg-red-50 text-red-700 border-red-200"
@@ -97,7 +97,7 @@ export default function StockAdjustmentModal({
             <button
               type="button"
               onClick={() => setType("increase")}
-              className={`py-2.5 rounded-lg text-sm font-medium border transition-colors
+              className={`py-2.5 rounded-lg text-sm font-medium border cursor-pointer transition-colors
                 ${
                   type === "increase"
                     ? "bg-emerald-50 text-emerald-700 border-emerald-200"
@@ -133,7 +133,7 @@ export default function StockAdjustmentModal({
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm
-                         focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                         focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
             >
               {REASONS.map((r) => (
                 <option key={r.value} value={r.value}>
@@ -171,7 +171,7 @@ export default function StockAdjustmentModal({
           type="submit"
           disabled={loading || projectedQuantity < 0}
           className="w-full bg-emerald-600 text-white py-2.5 rounded-lg text-sm font-medium
-                     hover:bg-emerald-700 transition-colors disabled:opacity-60"
+                     hover:bg-emerald-700 transition-colors disabled:opacity-60 cursor-pointer"
         >
           {loading ? "Saving..." : "Record Adjustment"}
         </button>

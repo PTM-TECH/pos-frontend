@@ -141,7 +141,7 @@ export default function TenantDetailPage() {
                   <button
                     onClick={handleActivate}
                     className="flex items-center gap-1.5 text-sm font-medium px-3 py-2
-                               bg-emerald-50 text-emerald-700 rounded-lg hover:bg-emerald-100"
+                               bg-emerald-50 text-emerald-700 rounded-lg hover:bg-emerald-100 cursor-pointer"
                   >
                     <CheckCircle2 className="w-4 h-4" />
                     Activate Tenant
@@ -150,7 +150,7 @@ export default function TenantDetailPage() {
                   <button
                     onClick={handleSuspend}
                     className="flex items-center gap-1.5 text-sm font-medium px-3 py-2
-                               bg-red-50 text-red-700 rounded-lg hover:bg-red-100"
+                               bg-red-50 text-red-700 rounded-lg hover:bg-red-100 cursor-pointer"
                   >
                     <XCircle className="w-4 h-4" />
                     Suspend Tenant
@@ -159,14 +159,14 @@ export default function TenantDetailPage() {
                 <button
                   onClick={() => setShowResetDialog(true)}
                   className="flex items-center gap-2 text-sm font-medium px-4 py-2.5 rounded-lg
-             border border-red-200 text-red-600 hover:bg-red-50 transition-colors"
+                            border border-red-200 text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
                 >
                   Reset Tenant Data
                 </button>
                 <button
                   onClick={() => setShowDeleteDialog(true)}
                   className="flex items-center gap-2 text-sm font-medium px-4 py-2.5 rounded-lg
-             bg-red-600 text-white hover:bg-red-700 transition-colors"
+                            bg-red-600 text-white hover:bg-red-700 transition-colors cursor-pointer"
                 >
                   Delete Tenant Permanently
                 </button>

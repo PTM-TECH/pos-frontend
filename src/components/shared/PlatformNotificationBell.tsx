@@ -57,7 +57,7 @@ export default function PlatformNotificationBell() {
     <div className="relative">
       <button
         onClick={handleOpen}
-        className="relative w-9 h-9 rounded-lg border border-gray-200 flex items-center justify-center hover:bg-gray-50"
+        className="relative w-9 h-9 rounded-lg border border-gray-200 flex items-center justify-center hover:bg-gray-50 cursor-pointer"
       >
         <Bell className="w-4 h-4 text-gray-600" />
         {unreadCount > 0 && (

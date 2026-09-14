@@ -175,7 +175,7 @@ export default function ProductFormModal({
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="e.g. Water Tap"
+            placeholder="e.g. Elite Book 840"
             className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm
                        focus:outline-none focus:ring-2 focus:ring-emerald-500"
           />
@@ -259,7 +259,7 @@ export default function ProductFormModal({
                 type="button"
                 onClick={() => setShowScanner(true)}
                 className="flex items-center justify-center w-10 h-10 border border-gray-200 rounded-lg
-                           text-gray-600 hover:bg-gray-50 transition-colors shrink-0"
+                           text-gray-600 hover:bg-gray-50 transition-colors shrink-0 cursor-pointer"
                 title="Scan barcode/QR to fill code"
               >
                 <ScanLine className="w-4 h-4" />
@@ -279,7 +279,7 @@ export default function ProductFormModal({
                 )
               }
               className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm
-                         focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                         focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
             >
               <option value="">None</option>
               {categories.map((c) => (
@@ -385,7 +385,7 @@ export default function ProductFormModal({
                       )
                     }
                     className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm
-                               focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                               focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
                   >
                     <option value="">None</option>
                     {vendors.map((v) => (
@@ -404,7 +404,7 @@ export default function ProductFormModal({
           type="submit"
           disabled={loading}
           className="w-full bg-emerald-600 text-white py-2.5 rounded-lg text-sm font-medium
-                     hover:bg-emerald-700 transition-colors disabled:opacity-60 mt-2"
+                     hover:bg-emerald-700 transition-colors disabled:opacity-60 mt-2 cursor-pointer"
         >
           {loading ? "Saving..." : isEdit ? "Update Product" : "Add Product"}
         </button>

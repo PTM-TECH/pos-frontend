@@ -119,7 +119,7 @@ export default function TenantsPage() {
             <button
               onClick={() => handleActivate(t.id)}
               className="flex items-center gap-1 text-xs font-medium px-2.5 py-1.5
-                         bg-emerald-50 text-emerald-700 rounded-lg hover:bg-emerald-100"
+                         bg-emerald-50 text-emerald-700 rounded-lg hover:bg-emerald-100 cursor-pointer"
             >
               <CheckCircle2 className="w-3.5 h-3.5" />
               Activate
@@ -128,7 +128,7 @@ export default function TenantsPage() {
             <button
               onClick={() => handleSuspend(t.id)}
               className="flex items-center gap-1 text-xs font-medium px-2.5 py-1.5
-                         bg-red-50 text-red-700 rounded-lg hover:bg-red-100"
+                         bg-red-50 text-red-700 rounded-lg hover:bg-red-100 cursor-pointer"
             >
               <XCircle className="w-3.5 h-3.5" />
               Suspend

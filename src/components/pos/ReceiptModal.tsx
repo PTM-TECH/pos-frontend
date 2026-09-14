@@ -117,7 +117,7 @@ export default function ReceiptModal({
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600"
+            className="text-gray-400 cursor-pointer hover:text-gray-600"
           >
             <X className="w-5 h-5" />
           </button>
@@ -245,7 +245,7 @@ export default function ReceiptModal({
                 key={item.id}
                 onClick={() => setReturningItem(item)}
                 className="w-full flex items-center justify-between text-xs px-3 py-2 rounded-lg
-                           border border-gray-200 text-gray-600 hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors"
+                           border border-gray-200 text-gray-600 hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors cursor-pointer"
               >
                 <span>Return &quot;{item.product_name}&quot;</span>
                 <RotateCcw className="w-3.5 h-3.5" />
@@ -257,7 +257,7 @@ export default function ReceiptModal({
         <div className="px-6 py-4 border-t border-gray-100">
           <button
             onClick={handlePrint}
-            className="w-full flex items-center justify-center gap-2 bg-gray-900 text-white py-3 rounded-xl text-sm font-medium hover:bg-gray-800 transition-colors"
+            className="w-full cursor-pointer flex items-center justify-center gap-2 bg-gray-900 text-white py-3 rounded-xl text-sm font-medium hover:bg-gray-800 transition-colors"
           >
             <Printer className="w-4 h-4" />
             {sale.payment_method === "credit"

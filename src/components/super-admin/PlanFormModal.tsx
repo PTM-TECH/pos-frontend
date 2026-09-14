@@ -150,7 +150,7 @@ export default function PlanFormModal({
           type="submit"
           disabled={loading}
           className="w-full bg-emerald-600 text-white py-2.5 rounded-lg text-sm font-medium
-                     hover:bg-emerald-700 transition-colors disabled:opacity-60"
+                     hover:bg-emerald-700 transition-colors disabled:opacity-60 cursor-pointer"
         >
           {loading ? 'Saving...' : isEdit ? 'Update Plan' : 'Add Plan'}
         </button>

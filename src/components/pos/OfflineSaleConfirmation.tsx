@@ -31,7 +31,7 @@ export default function OfflineSaleConfirmation({
         </div>
         <button
           onClick={onClose}
-          className="w-full bg-emerald-600 text-white py-2.5 rounded-lg text-sm font-medium hover:bg-emerald-700 transition-colors"
+          className="w-full cursor-pointer bg-emerald-600 text-white py-2.5 rounded-lg text-sm font-medium hover:bg-emerald-700 transition-colors"
         >
           Done
         </button>

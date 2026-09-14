@@ -184,7 +184,7 @@ export default function BillingPage() {
                 </ol>
                 <button
                   onClick={copyTill}
-                  className="flex items-center gap-2 text-xs text-emerald-700 hover:text-emerald-800"
+                  className="flex items-center gap-2 text-xs text-emerald-700 hover:text-emerald-800 cursor-pointer"
                 >
                   {copied ? (
                     <CheckCircle2 className="w-3.5 h-3.5" />
@@ -216,7 +216,7 @@ export default function BillingPage() {
                   type="submit"
                   disabled={submitting}
                   className="w-full bg-emerald-600 text-white py-2.5 rounded-lg text-sm font-medium
-                             hover:bg-emerald-700 transition-colors disabled:opacity-60"
+                             hover:bg-emerald-700 transition-colors cursor-pointer disabled:opacity-60"
                 >
                   {submitting
                     ? "Submitting..."

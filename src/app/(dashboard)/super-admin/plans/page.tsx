@@ -1,49 +1,49 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from 'react'
-import { Plus, Pencil, Trash2, Crown } from 'lucide-react'
-import Topbar from '@/components/shared/Topbar'
-import PlanFormModal from '@/components/super-admin/PlanFormModal'
-import ConfirmDialog from '@/components/ui/ConfirmDialog'
-import { getPlans, deletePlan, Plan } from '@/lib/plans'
-import { formatCurrency, getErrorMessage } from '@/lib/utils'
-import toast from 'react-hot-toast'
+import { useEffect, useState } from "react";
+import { Plus, Pencil, Trash2, Crown } from "lucide-react";
+import Topbar from "@/components/shared/Topbar";
+import PlanFormModal from "@/components/super-admin/PlanFormModal";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
+import { getPlans, deletePlan, Plan } from "@/lib/plans";
+import { formatCurrency, getErrorMessage } from "@/lib/utils";
+import toast from "react-hot-toast";
 
 export default function PlansPage() {
-  const [plans, setPlans] = useState<Plan[]>([])
-  const [loading, setLoading] = useState(true)
-  const [showModal, setShowModal] = useState(false)
-  const [editing, setEditing] = useState<Plan | null>(null)
-  const [deleteTarget, setDeleteTarget] = useState<Plan | null>(null)
-  const [deleting, setDeleting] = useState(false)
+  const [plans, setPlans] = useState<Plan[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [editing, setEditing] = useState<Plan | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<Plan | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   async function loadData() {
-    setLoading(true)
+    setLoading(true);
     try {
-      setPlans(await getPlans())
+      setPlans(await getPlans());
     } catch {
-      toast.error('Failed to load plans')
+      toast.error("Failed to load plans");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
   useEffect(() => {
-    loadData()
-  }, [])
+    loadData();
+  }, []);
 
   async function handleDelete() {
-    if (!deleteTarget) return
-    setDeleting(true)
+    if (!deleteTarget) return;
+    setDeleting(true);
     try {
-      await deletePlan(deleteTarget.id)
-      toast.success('Plan deleted')
-      setDeleteTarget(null)
-      loadData()
+      await deletePlan(deleteTarget.id);
+      toast.success("Plan deleted");
+      setDeleteTarget(null);
+      loadData();
     } catch (err: any) {
-      toast.error(getErrorMessage(err))
+      toast.error(getErrorMessage(err));
     } finally {
-      setDeleting(false)
+      setDeleting(false);
     }
   }
 
@@ -52,14 +52,16 @@ export default function PlansPage() {
       <Topbar title="Plans" />
       <div className="p-6 space-y-5">
         <div className="flex items-center justify-between">
-          <p className="text-sm text-gray-500">Manage subscription plans offered to tenants</p>
+          <p className="text-sm text-gray-500">
+            Manage subscription plans offered to tenants
+          </p>
           <button
             onClick={() => {
-              setEditing(null)
-              setShowModal(true)
+              setEditing(null);
+              setShowModal(true);
             }}
             className="flex items-center gap-2 bg-emerald-600 text-white px-4 py-2.5
-                       rounded-lg text-sm font-medium hover:bg-emerald-700 transition-colors"
+                       rounded-lg text-sm font-medium hover:bg-emerald-700 transition-colors cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             Add Plan
@@ -77,43 +79,56 @@ export default function PlansPage() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {plans.map((plan) => (
-              <div key={plan.id} className="bg-white rounded-xl border border-gray-200 p-5">
+              <div
+                key={plan.id}
+                className="bg-white rounded-xl border border-gray-200 p-5"
+              >
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-2.5">
                     <div className="w-9 h-9 rounded-lg bg-emerald-50 flex items-center justify-center">
                       <Crown className="w-4 h-4 text-emerald-600" />
                     </div>
                     <div>
-                      <h3 className="text-sm font-semibold text-gray-900 capitalize">{plan.name}</h3>
-                      <p className="text-xs text-gray-500 capitalize">{plan.billing_cycle}</p>
+                      <h3 className="text-sm font-semibold text-gray-900 capitalize">
+                        {plan.name}
+                      </h3>
+                      <p className="text-xs text-gray-500 capitalize">
+                        {plan.billing_cycle}
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <button
                       onClick={() => {
-                        setEditing(plan)
-                        setShowModal(true)
+                        setEditing(plan);
+                        setShowModal(true);
                       }}
-                      className="w-7 h-7 rounded-lg border border-gray-200 flex items-center justify-center
-                                 text-gray-500 hover:bg-gray-50"
+                      className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center
+                     text-blue-500 hover:bg-blue-50 hover:text-blue-700 cursor-pointer transition-colors"
+                      title="Edit Plan"
                     >
                       <Pencil className="w-3.5 h-3.5" />
                     </button>
                     <button
                       onClick={() => setDeleteTarget(plan)}
-                      className="w-7 h-7 rounded-lg border border-gray-200 flex items-center justify-center
-                                 text-gray-500 hover:bg-red-50 hover:text-red-600"
+                      className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center
+                     text-red-500 hover:bg-red-50 hover:text-red-700 cursor-pointer transition-colors"
+                      title="Delete Plan"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
                   </div>
                 </div>
 
-                <p className="text-2xl font-bold text-gray-900 mb-3">{formatCurrency(plan.price)}</p>
+                <p className="text-2xl font-bold text-gray-900 mb-3">
+                  {formatCurrency(plan.price)}
+                </p>
 
                 <div className="text-xs text-gray-500 mb-3">
-                  {plan.max_stores === -1 ? 'Unlimited' : plan.max_stores} stores ·{' '}
-                  {plan.max_members === -1 ? 'Unlimited' : plan.max_members} members
+                  {plan.max_stores === -1 ? "Unlimited" : plan.max_stores}{" "}
+                  stores ·{" "}
+                  {plan.max_members === -1 ? "Unlimited" : plan.max_members}{" "}
+                  members
                 </div>
 
                 {plan.features && plan.features.length > 0 && (
@@ -134,8 +149,8 @@ export default function PlansPage() {
           plan={editing}
           onClose={() => setShowModal(false)}
           onSaved={() => {
-            setShowModal(false)
-            loadData()
+            setShowModal(false);
+            loadData();
           }}
         />
       )}
@@ -150,5 +165,5 @@ export default function PlansPage() {
         />
       )}
     </>
-  )
+  );
 }

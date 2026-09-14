@@ -32,7 +32,7 @@ export default function StoreSwitcher() {
       <button
         onClick={() => setOpen(!open)}
         className="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200
-                   text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+                   text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
       >
         <StoreIcon className="w-4 h-4 text-gray-500" />
         {selectedStore ? selectedStore.name : 'All Stores'}
@@ -51,7 +51,7 @@ export default function StoreSwitcher() {
                 setSelectedStoreId(null)
                 setOpen(false)
               }}
-              className={`w-full text-left px-4 py-2.5 text-sm hover:bg-gray-50 transition-colors
+              className={`w-full text-left px-4 py-2.5 text-sm hover:bg-gray-50 transition-colors cursor-pointer
                 ${!selectedStoreId ? 'text-emerald-600 font-medium bg-emerald-50/50' : 'text-gray-700'}`}
             >
               All Stores

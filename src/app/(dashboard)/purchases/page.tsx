@@ -194,7 +194,7 @@ export default function PurchasesPage() {
             <button
               onClick={() => setShowModal(true)}
               className="flex items-center gap-2 bg-emerald-600 text-white px-4 py-2.5
-                         rounded-lg text-sm font-medium hover:bg-emerald-700 transition-colors"
+                         rounded-lg text-sm font-medium hover:bg-emerald-700 transition-colors cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               New Purchase
@@ -254,7 +254,7 @@ export default function PurchasesPage() {
             <button
               key={preset.value}
               onClick={() => setDatePreset(preset.value)}
-              className={`text-xs font-medium px-3 py-1.5 rounded-lg border transition-colors
+              className={`text-xs font-medium px-3 py-1.5 rounded-lg border cursor-pointer transition-colors
                 ${
                   datePreset === preset.value
                     ? "bg-emerald-50 text-emerald-700 border-emerald-200"
@@ -291,7 +291,7 @@ export default function PurchasesPage() {
             value={vendorFilter}
             onChange={(e) => setVendorFilter(e.target.value)}
             className="text-xs font-medium border border-gray-200 rounded-lg px-2.5 py-1.5
-                       focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                       focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
           >
             <option value="all">All Vendors</option>
             {vendors.map((v) => (
@@ -334,7 +334,7 @@ export default function PurchasesPage() {
                   </span>
                   <button
                     onClick={() => setViewingPurchase(p)}
-                    className="w-7 h-7 rounded-lg border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-gray-50"
+                    className="w-7 h-7 rounded-lg border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-gray-50 cursor-pointer"
                     title="View items"
                   >
                     <Eye className="w-3.5 h-3.5" />
@@ -374,7 +374,7 @@ export default function PurchasesPage() {
                       onClick={() => handleReceive(p.id)}
                       disabled={actionLoading === p.id}
                       className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg
-                                 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors disabled:opacity-50"
+                                 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors disabled:opacity-50 cursor-pointer"
                     >
                       <CheckCircle2 className="w-3.5 h-3.5" />
                       Mark as Received
@@ -383,7 +383,7 @@ export default function PurchasesPage() {
                       onClick={() => handleCancel(p.id)}
                       disabled={actionLoading === p.id}
                       className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg
-                                 bg-red-50 text-red-700 hover:bg-red-100 transition-colors disabled:opacity-50"
+                                 bg-red-50 text-red-700 hover:bg-red-100 transition-colors disabled:opacity-50 cursor-pointer"
                     >
                       <XCircle className="w-3.5 h-3.5" />
                       Cancel

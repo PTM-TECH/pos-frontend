@@ -40,7 +40,7 @@ export default function SyncStatusBadge() {
     <button
       onClick={() => triggerSync()}
       className="flex items-center gap-1.5 text-xs font-medium px-2.5 py-1.5 rounded-lg
-                 bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100 transition-colors"
+                 bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100 transition-colors cursor-pointer"
       title="Click to retry sync now"
     >
       <CloudOff className="w-3.5 h-3.5" />

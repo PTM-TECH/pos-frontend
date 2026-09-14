@@ -148,7 +148,7 @@ export default function PurchaseFormModal({
               )
             }
             className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm
-                       focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                       focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
           >
             <option value="">Select a store</option>
             {stores.map((s) => (
@@ -184,7 +184,7 @@ export default function PurchaseFormModal({
                 setVendorId(e.target.value === "" ? "" : Number(e.target.value))
               }
               className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm
-                         focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                         focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
             >
               <option value="">None</option>
               {vendors.map((v) => (
@@ -251,7 +251,7 @@ export default function PurchaseFormModal({
                         <button
                           type="button"
                           onClick={() => updateRow(index, "product_id", "")}
-                          className="text-gray-400 hover:text-red-500 shrink-0 ml-2"
+                          className="text-gray-400 hover:text-red-500 shrink-0 ml-2 cursor-pointer"
                         >
                           <X className="w-3.5 h-3.5" />
                         </button>
@@ -294,7 +294,7 @@ export default function PurchaseFormModal({
                                     setProductSearchOpen(null);
                                     setProductSearchQuery("");
                                   }}
-                                  className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 border-b border-gray-50 last:border-0"
+                                  className="w-full cursor-pointer text-left px-3 py-2 text-sm hover:bg-gray-50 border-b border-gray-50 last:border-0"
                                 >
                                   {p.name}
                                   {p.code && (
@@ -349,7 +349,7 @@ export default function PurchaseFormModal({
                   <button
                     type="button"
                     onClick={() => removeRow(index)}
-                    className="text-gray-300 hover:text-red-500 shrink-0"
+                    className="text-gray-300 hover:text-red-500 shrink-0 cursor-pointer"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -360,7 +360,7 @@ export default function PurchaseFormModal({
               <button
                 type="button"
                 onClick={addRow}
-                className="flex items-center gap-1 text-xs font-medium text-emerald-600 hover:text-emerald-700"
+                className="flex items-center gap-1 text-xs font-medium text-emerald-600 hover:text-emerald-700 cursor-pointer"
               >
                 <Plus className="w-3.5 h-3.5" />
                 Add item
@@ -380,7 +380,7 @@ export default function PurchaseFormModal({
           type="submit"
           disabled={loading || !isFormValid}
           className="w-full bg-emerald-600 text-white py-2.5 rounded-lg text-sm font-medium
-                     hover:bg-emerald-700 transition-colors disabled:opacity-60"
+                     hover:bg-emerald-700 transition-colors cursor-pointer disabled:opacity-60"
         >
           {loading ? "Creating..." : "Create Purchase Order"}
         </button>

@@ -99,7 +99,7 @@ export default function ClientFormModal({
               value={gender}
               onChange={(e) => setGender(e.target.value)}
               className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm
-                         focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                         focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
             >
               <option value="">Select</option>
               <option value="male">Male</option>
@@ -112,7 +112,7 @@ export default function ClientFormModal({
           type="submit"
           disabled={loading}
           className="w-full bg-emerald-600 text-white py-2.5 rounded-lg text-sm font-medium
-                     hover:bg-emerald-700 transition-colors disabled:opacity-60"
+                     hover:bg-emerald-700 transition-colors cursor-pointer disabled:opacity-60"
         >
           {loading ? 'Saving...' : isEdit ? 'Update Client' : 'Add Client'}
         </button>

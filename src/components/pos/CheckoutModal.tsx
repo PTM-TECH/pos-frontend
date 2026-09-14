@@ -179,7 +179,7 @@ export default function CheckoutModal({
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600"
+            className="text-gray-400 cursor-pointer hover:text-gray-600"
           >
             <X className="w-5 h-5" />
           </button>
@@ -202,7 +202,7 @@ export default function CheckoutModal({
                 <button
                   type="button"
                   onClick={() => setCustomerMode("search")}
-                  className={`text-xs font-medium px-2.5 py-1 rounded-md transition-colors
+                  className={`text-xs cursor-pointer font-medium px-2.5 py-1 rounded-md transition-colors
                     ${customerMode === "search" ? "bg-white shadow-sm text-gray-900" : "text-gray-500"}`}
                 >
                   Search existing
@@ -210,7 +210,7 @@ export default function CheckoutModal({
                 <button
                   type="button"
                   onClick={() => setCustomerMode("new")}
-                  className={`text-xs font-medium px-2.5 py-1 rounded-md transition-colors
+                  className={`text-xs cursor-pointer font-medium px-2.5 py-1 rounded-md transition-colors
                     ${customerMode === "new" ? "bg-white shadow-sm text-gray-900" : "text-gray-500"}`}
                 >
                   New customer
@@ -227,7 +227,7 @@ export default function CheckoutModal({
                   <button
                     type="button"
                     onClick={() => setClientId(null)}
-                    className="text-xs text-gray-400 hover:text-red-500"
+                    className="text-xs cursor-pointer text-gray-400 hover:text-red-500"
                   >
                     Remove
                   </button>
@@ -264,7 +264,7 @@ export default function CheckoutModal({
                               setClientQuery("");
                               setShowClientDropdown(false);
                             }}
-                            className="w-full text-left px-3.5 py-2.5 text-sm hover:bg-gray-50 border-b border-gray-50 last:border-0"
+                            className="w-full cursor-pointer text-left px-3.5 py-2.5 text-sm hover:bg-gray-50 border-b border-gray-50 last:border-0"
                           >
                             {c.name}
                             {c.phone && (
@@ -313,7 +313,7 @@ export default function CheckoutModal({
                           setNewClientPhone("");
                           setPhoneMatchClients([]);
                         }}
-                        className="w-full text-left text-xs font-medium text-amber-900 hover:underline"
+                        className="w-full cursor-pointer text-left text-xs font-medium text-amber-900 hover:underline"
                       >
                         Use {c.name} instead →
                       </button>
@@ -338,7 +338,7 @@ export default function CheckoutModal({
                     key={m.value}
                     onClick={() => handlePaymentMethodChange(m.value)}
                     disabled={disabled}
-                    className={`flex flex-col items-center gap-1.5 py-3 rounded-xl border-2 transition-colors
+                    className={`flex flex-col cursor-pointer items-center gap-1.5 py-3 rounded-xl border-2 transition-colors
                       ${
                         active
                           ? "border-emerald-500 bg-emerald-50 text-emerald-700"
@@ -388,7 +388,7 @@ export default function CheckoutModal({
           <button
             onClick={handleConfirm}
             disabled={loading}
-            className="w-full bg-emerald-600 text-white py-3 rounded-xl text-sm font-medium
+            className="w-full cursor-pointer bg-emerald-600 text-white py-3 rounded-xl text-sm font-medium
                        hover:bg-emerald-700 transition-colors disabled:opacity-60"
           >
             {loading ? "Processing..." : "Confirm Sale"}
