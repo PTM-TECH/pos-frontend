@@ -114,7 +114,7 @@ function ResetPasswordForm() {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer"
             >
               {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
@@ -148,7 +148,7 @@ function ResetPasswordForm() {
           type="submit"
           disabled={loading}
           className="w-full bg-emerald-600 text-white py-2.5 rounded-lg text-sm font-medium
-                     hover:bg-emerald-700 transition-colors disabled:opacity-60 mt-2"
+                     hover:bg-emerald-700 transition-colors cursor-pointer disabled:opacity-60 mt-2"
         >
           {loading ? 'Resetting...' : 'Reset password'}
         </button>

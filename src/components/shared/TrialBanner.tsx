@@ -64,7 +64,7 @@ export default function TrialBanner() {
       </div>
       <button
         onClick={() => setDismissed(true)}
-        className={isUrgent ? 'text-amber-600 hover:text-amber-800 shrink-0' : 'text-blue-600 hover:text-blue-800 shrink-0'}
+        className={isUrgent ? 'text-amber-600 hover:text-amber-800 shrink-0' : 'text-blue-600 hover:text-blue-800 shrink-0 cursor-pointer'}
       >
         <X className="w-4 h-4" />
       </button>

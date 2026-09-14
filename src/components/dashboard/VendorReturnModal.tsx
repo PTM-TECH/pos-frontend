@@ -53,7 +53,7 @@ export default function VendorReturnModal({
       <div className="bg-white rounded-2xl w-full max-w-sm">
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
           <h2 className="text-base font-semibold text-gray-900">Return to Vendor</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 cursor-pointer">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -89,7 +89,7 @@ export default function VendorReturnModal({
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm
-                         focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                         focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
             >
               {REASONS.map((r) => (
                 <option key={r.value} value={r.value}>{r.label}</option>
@@ -115,7 +115,7 @@ export default function VendorReturnModal({
             type="submit"
             disabled={loading}
             className="w-full bg-red-600 text-white py-2.5 rounded-lg text-sm font-medium
-                       hover:bg-red-700 transition-colors disabled:opacity-60"
+                       hover:bg-red-700 transition-colors disabled:opacity-60 cursor-pointer"
           >
             {loading ? 'Processing...' : 'Confirm Return'}
           </button>

@@ -196,7 +196,7 @@ export default function InventoryPage() {
           <div className="flex gap-2 shrink-0">
             <button
               onClick={() => setShowInactive(!showInactive)}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors border
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium cursor-pointer transition-colors border
                 ${
                   showInactive
                     ? "bg-gray-100 text-gray-700 border-gray-300"
@@ -208,7 +208,7 @@ export default function InventoryPage() {
             <button
               onClick={() => setShowCategoryModal(true)}
               className="flex items-center gap-2 border border-gray-200 text-gray-700 px-4 py-2.5
-                         rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors"
+                         rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors cursor-pointer"
             >
               <FolderPlus className="w-4 h-4" />
               Category
@@ -219,7 +219,7 @@ export default function InventoryPage() {
                 setShowProductModal(true);
               }}
               className="flex items-center gap-2 bg-emerald-600 text-white px-4 py-2.5
-                         rounded-lg text-sm font-medium hover:bg-emerald-700 transition-colors"
+                         rounded-lg text-sm font-medium hover:bg-emerald-700 transition-colors cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               Add Product
@@ -232,7 +232,7 @@ export default function InventoryPage() {
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
             className="text-xs font-medium border border-gray-200 rounded-lg px-2.5 py-1.5
-                       focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                       focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
           >
             <option value="all">All Categories ({products.length})</option>
             {categoryCounts.map((cat) => (
@@ -252,7 +252,7 @@ export default function InventoryPage() {
             <button
               key={opt.value}
               onClick={() => setStockFilter(opt.value as typeof stockFilter)}
-              className={`text-xs font-medium px-3 py-1.5 rounded-lg border transition-colors
+              className={`text-xs font-medium px-3 py-1.5 rounded-lg border transition-colors cursor-pointer
                 ${
                   stockFilter === opt.value
                     ? "bg-emerald-50 text-emerald-700 border-emerald-200"
@@ -303,7 +303,7 @@ export default function InventoryPage() {
                     onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                     disabled={currentPage === 1}
                     className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center
-                               text-gray-500 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
+                               text-gray-500 hover:bg-gray-50 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     <ChevronLeft className="w-4 h-4" />
                   </button>
@@ -316,7 +316,7 @@ export default function InventoryPage() {
                     }
                     disabled={currentPage === totalPages}
                     className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center
-                               text-gray-500 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
+                               text-gray-500 hover:bg-gray-50 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     <ChevronRight className="w-4 h-4" />
                   </button>

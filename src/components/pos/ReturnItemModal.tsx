@@ -89,7 +89,7 @@ export default function ReturnItemModal({
           type="submit"
           disabled={loading || maxReturnable <= 0}
           className="w-full bg-red-600 text-white py-2.5 rounded-lg text-sm font-medium
-                     hover:bg-red-700 transition-colors disabled:opacity-60"
+                     hover:bg-red-700 transition-colors disabled:opacity-60 cursor-pointer"
         >
           {loading ? 'Processing...' : 'Process Return'}
         </button>

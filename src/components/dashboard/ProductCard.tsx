@@ -116,6 +116,7 @@ export default function ProductCard({
           onClick={onDelete}
           className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center
                      text-red-500 hover:bg-red-50 hover:text-red-700 cursor-pointer transition-colors"
+          title="Delete Product"
         >
           <Trash2 className="w-3.5 h-3.5" />
         </button>

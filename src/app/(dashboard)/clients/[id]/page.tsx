@@ -46,7 +46,7 @@ export default function ClientDetailPage() {
         <button
           onClick={() => setViewingSale(s)}
           className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center
-                     text-gray-500 hover:bg-gray-50"
+                     text-gray-500 hover:bg-gray-50 cursor-pointer"
         >
           <Eye className="w-3.5 h-3.5" />
         </button>

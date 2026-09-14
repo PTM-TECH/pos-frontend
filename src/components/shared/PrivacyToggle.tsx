@@ -10,7 +10,7 @@ export default function PrivacyToggle() {
   return (
     <button
       onClick={toggleAmountsHidden}
-      className="w-9 h-9 rounded-lg border border-gray-200 flex items-center justify-center hover:bg-gray-50"
+      className="w-9 h-9 rounded-lg border border-gray-200 flex items-center justify-center hover:bg-gray-50 cursor-pointer"
       title={amountsHidden ? 'Show amounts' : 'Hide amounts'}
     >
       {amountsHidden ? (

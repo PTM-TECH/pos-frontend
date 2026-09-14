@@ -40,7 +40,7 @@ export default function ExpenseChart({
           value={year}
           onChange={(e) => onYearChange(Number(e.target.value))}
           className="text-sm border border-gray-200 rounded-lg px-2.5 py-1.5
-                     focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                     focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
         >
           {[year - 1, year, year + 1].map((y) => (
             <option key={y} value={y}>{y}</option>

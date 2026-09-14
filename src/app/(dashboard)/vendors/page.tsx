@@ -1,91 +1,97 @@
+"use client";
 
-'use client'
-
-import { useEffect, useState } from 'react'
-import { Pencil, Trash2 } from 'lucide-react'
-import Topbar from '@/components/shared/Topbar'
-import PageHeader from '@/components/ui/PageHeader'
-import DataTable, { Column } from '@/components/ui/DataTable'
-import VendorFormModal from '@/components/dashboard/VendorFormModal'
-import ConfirmDialog from '@/components/ui/ConfirmDialog'
-import { getVendors, deleteVendor } from '@/lib/vendors'
-import { getErrorMessage } from '@/lib/utils'
-import { Vendor } from '@/types'
-import toast from 'react-hot-toast'
+import { useEffect, useState } from "react";
+import { Pencil, Trash2 } from "lucide-react";
+import Topbar from "@/components/shared/Topbar";
+import PageHeader from "@/components/ui/PageHeader";
+import DataTable, { Column } from "@/components/ui/DataTable";
+import VendorFormModal from "@/components/dashboard/VendorFormModal";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
+import { getVendors, deleteVendor } from "@/lib/vendors";
+import { getErrorMessage } from "@/lib/utils";
+import { Vendor } from "@/types";
+import toast from "react-hot-toast";
 
 export default function VendorsPage() {
-  const [vendors, setVendors] = useState<Vendor[]>([])
-  const [query, setQuery] = useState('')
-  const [loading, setLoading] = useState(true)
-  const [showModal, setShowModal] = useState(false)
-  const [editing, setEditing] = useState<Vendor | null>(null)
-  const [deleteTarget, setDeleteTarget] = useState<Vendor | null>(null)
-  const [deleting, setDeleting] = useState(false)
+  const [vendors, setVendors] = useState<Vendor[]>([]);
+  const [query, setQuery] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [editing, setEditing] = useState<Vendor | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<Vendor | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   async function loadData() {
-    setLoading(true)
+    setLoading(true);
     try {
-      setVendors(await getVendors())
+      setVendors(await getVendors());
     } catch {
-      toast.error('Failed to load vendors')
+      toast.error("Failed to load vendors");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
   useEffect(() => {
-    loadData()
-  }, [])
+    loadData();
+  }, []);
 
   const filtered = vendors.filter((v) =>
-    v.name.toLowerCase().includes(query.toLowerCase())
-  )
+    v.name.toLowerCase().includes(query.toLowerCase()),
+  );
 
   async function handleDelete() {
-    if (!deleteTarget) return
-    setDeleting(true)
+    if (!deleteTarget) return;
+    setDeleting(true);
     try {
-      await deleteVendor(deleteTarget.id)
-      toast.success('Vendor deleted')
-      setDeleteTarget(null)
-      loadData()
+      await deleteVendor(deleteTarget.id);
+      toast.success("Vendor deleted");
+      setDeleteTarget(null);
+      loadData();
     } catch (err: any) {
-      toast.error(getErrorMessage(err))
+      toast.error(getErrorMessage(err));
     } finally {
-      setDeleting(false)
+      setDeleting(false);
     }
   }
 
   const columns: Column<Vendor>[] = [
-    { header: 'Name', render: (v) => <span className="font-medium text-gray-900">{v.name}</span> },
-    { header: 'Contact', render: (v) => v.contact ?? '—' },
-    { header: 'Phone', render: (v) => v.phone ?? '—' },
-    { header: 'Location', render: (v) => v.location ?? '—' },
     {
-      header: 'Action',
+      header: "Name",
+      render: (v) => (
+        <span className="font-medium text-gray-900">{v.name}</span>
+      ),
+    },
+    { header: "Contact", render: (v) => v.contact ?? "—" },
+    { header: "Phone", render: (v) => v.phone ?? "—" },
+    { header: "Location", render: (v) => v.location ?? "—" },
+    {
+      header: "Action",
       render: (v) => (
         <div className="flex items-center gap-2">
           <button
             onClick={() => {
-              setEditing(v)
-              setShowModal(true)
+              setEditing(v);
+              setShowModal(true);
             }}
             className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center
-                       text-gray-500 hover:bg-gray-50"
+                     text-blue-500 hover:bg-blue-50 hover:text-blue-700 cursor-pointer transition-colors"
+            title="Edit Vendor"
           >
             <Pencil className="w-3.5 h-3.5" />
           </button>
           <button
             onClick={() => setDeleteTarget(v)}
             className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center
-                       text-gray-500 hover:bg-red-50 hover:text-red-600"
+                     text-red-500 hover:bg-red-50 hover:text-red-700 cursor-pointer transition-colors"
+            title="Delete Vendor"
           >
             <Trash2 className="w-3.5 h-3.5" />
           </button>
         </div>
       ),
     },
-  ]
+  ];
 
   return (
     <>
@@ -97,11 +103,16 @@ export default function VendorsPage() {
           placeholder="Search vendors..."
           buttonLabel="Add Vendor"
           onButtonClick={() => {
-            setEditing(null)
-            setShowModal(true)
+            setEditing(null);
+            setShowModal(true);
           }}
         />
-        <DataTable columns={columns} data={filtered} loading={loading} emptyMessage="No vendors found" />
+        <DataTable
+          columns={columns}
+          data={filtered}
+          loading={loading}
+          emptyMessage="No vendors found"
+        />
       </div>
 
       {showModal && (
@@ -109,8 +120,8 @@ export default function VendorsPage() {
           vendor={editing}
           onClose={() => setShowModal(false)}
           onSaved={() => {
-            setShowModal(false)
-            loadData()
+            setShowModal(false);
+            loadData();
           }}
         />
       )}
@@ -125,5 +136,5 @@ export default function VendorsPage() {
         />
       )}
     </>
-  )
+  );
 }

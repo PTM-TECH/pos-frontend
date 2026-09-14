@@ -133,7 +133,7 @@ function LoginForm() {
           <button
             type="submit"
             disabled={loading || code.length !== 6}
-            className="w-full bg-emerald-600 text-white py-2.5 rounded-lg text-sm font-medium
+            className="w-full cursor-pointer bg-emerald-600 text-white py-2.5 rounded-lg text-sm font-medium
                        hover:bg-emerald-700 transition-colors disabled:opacity-60"
           >
             {loading ? "Verifying..." : "Verify and sign in"}
@@ -143,7 +143,7 @@ function LoginForm() {
             <button
               type="button"
               onClick={() => setStage("credentials")}
-              className="text-gray-500 hover:text-gray-700"
+              className="text-gray-500 hover:text-gray-700 cursor-pointer"
             >
               Back to login
             </button>
@@ -151,7 +151,7 @@ function LoginForm() {
               type="button"
               onClick={handleResendCode}
               disabled={resending || resendCooldown > 0}
-              className="text-emerald-600 hover:text-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="text-emerald-600 hover:text-emerald-700 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {resendCooldown > 0
                 ? `Resend code in ${resendCooldown}s`
@@ -215,7 +215,7 @@ function LoginForm() {
             </label>
             <Link
               href="/forgot-password"
-              className="text-xs font-medium text-emerald-600 hover:text-emerald-700"
+              className="text-xs cursor-pointer font-medium text-emerald-600 hover:text-emerald-700"
             >
               Forgot password?
             </Link>
@@ -235,7 +235,7 @@ function LoginForm() {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer"
             >
               {showPassword ? (
                 <EyeOff className="w-4 h-4" />
@@ -258,7 +258,7 @@ function LoginForm() {
           type="submit"
           disabled={loading}
           className="w-full bg-emerald-600 text-white py-2.5 rounded-lg text-sm font-medium
-                     hover:bg-emerald-700 transition-colors disabled:opacity-60
+                     hover:bg-emerald-700 transition-colors cursor-pointer disabled:opacity-60
                      disabled:cursor-not-allowed mt-2"
         >
           {loading ? "Signing in..." : "Sign in"}
@@ -269,7 +269,7 @@ function LoginForm() {
         Don&apos;t have an account?{" "}
         <Link
           href="/register"
-          className="text-emerald-600 hover:text-emerald-700 font-medium"
+          className="text-emerald-600 hover:text-emerald-700 font-medium cursor-pointer"
         >
           Start free trial
         </Link>

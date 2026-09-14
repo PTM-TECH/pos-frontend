@@ -29,7 +29,7 @@ export default function PurchaseDetailModal({
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600"
+            className="text-gray-400 hover:text-gray-600 cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -89,7 +89,7 @@ export default function PurchaseDetailModal({
                   </p>
                   <button
                     onClick={() => setReturningItem(item)}
-                    className="text-gray-300 hover:text-red-500"
+                    className="text-gray-300 hover:text-red-500 cursor-pointer"
                     title="Return to vendor"
                   >
                     <RotateCcw className="w-3.5 h-3.5" />

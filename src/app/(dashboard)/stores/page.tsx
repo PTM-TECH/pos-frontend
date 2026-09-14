@@ -109,14 +109,16 @@ export default function StoresPage() {
                       setShowModal(true);
                     }}
                     className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center
-                               text-gray-500 hover:bg-gray-50"
+                     text-blue-500 hover:bg-blue-50 hover:text-blue-700 cursor-pointer transition-colors"
+                  title="Edit Store"
                   >
                     <Pencil className="w-3.5 h-3.5" />
                   </button>
                   <button
                     onClick={() => setDeleteTarget(store)}
                     className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center
-                               text-gray-500 hover:bg-red-50 hover:text-red-600"
+                     text-red-500 hover:bg-red-50 hover:text-red-700 cursor-pointer transition-colors"
+                  title="Delete Store"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>

@@ -46,7 +46,7 @@ export default function RecordPurchasePaymentForm({
         <button
           onClick={handleConfirm}
           disabled={loading}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium disabled:opacity-60"
+          className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium cursor-pointer disabled:opacity-60"
         >
           {loading ? 'Recording...' : 'Record Payment'}
         </button>

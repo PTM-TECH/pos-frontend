@@ -79,14 +79,14 @@ export default function ClientsPage() {
               setShowModal(true)
             }}
             className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center
-                       text-gray-500 hover:bg-gray-50"
+                       text-gray-500 hover:bg-gray-50 cursor-pointer"
           >
             <Pencil className="w-3.5 h-3.5" />
           </button>
           <button
             onClick={() => setDeleteTarget(c)}
             className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center
-                       text-gray-500 hover:bg-red-50 hover:text-red-600"
+                       text-gray-500 hover:bg-red-50 hover:text-red-600 cursor-pointer"
           >
             <Trash2 className="w-3.5 h-3.5" />
           </button>

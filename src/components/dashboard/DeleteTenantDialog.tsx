@@ -45,7 +45,7 @@ export default function DeleteTenantDialog({
             <AlertTriangle className="w-5 h-5" />
             Delete Tenant
           </h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 cursor-pointer">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -76,7 +76,7 @@ export default function DeleteTenantDialog({
             onClick={handleDelete}
             disabled={!isConfirmed || loading}
             className="w-full bg-red-600 text-white py-2.5 rounded-lg text-sm font-medium
-                       hover:bg-red-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                       hover:bg-red-700 transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
           >
             {loading ? 'Deleting...' : 'Permanently Delete Tenant'}
           </button>

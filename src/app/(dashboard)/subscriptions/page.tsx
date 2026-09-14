@@ -59,7 +59,7 @@ export default function SubscriptionsPage() {
           <button
             onClick={() => setShowModal(true)}
             className="flex items-center gap-2 bg-emerald-600 text-white px-4 py-2.5
-                       rounded-lg text-sm font-medium hover:bg-emerald-700 transition-colors"
+                       rounded-lg text-sm font-medium hover:bg-emerald-700 transition-colors cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             New Subscription
@@ -98,7 +98,7 @@ export default function SubscriptionsPage() {
                   </div>
                   <button
                     onClick={() => setDeleteTarget(s)}
-                    className="text-gray-300 hover:text-red-500"
+                    className="text-gray-300 hover:text-red-500 cursor-pointer"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>

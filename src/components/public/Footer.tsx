@@ -20,7 +20,7 @@ export default function Footer() {
           <div>
             <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Product</p>
             <div className="space-y-2">
-              <Link href="/#features" className="block text-sm text-gray-500 hover:text-gray-300">Features</Link>
+              <Link href="/features" className="block text-sm text-gray-500 hover:text-gray-300">Features</Link>
               <Link href="/pricing" className="block text-sm text-gray-500 hover:text-gray-300">Pricing</Link>
               <Link href="/register" className="block text-sm text-gray-500 hover:text-gray-300">Get started</Link>
             </div>

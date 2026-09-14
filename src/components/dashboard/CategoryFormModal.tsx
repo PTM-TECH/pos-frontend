@@ -49,7 +49,7 @@ export default function CategoryFormModal({
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="e.g. Pipe"
+            placeholder="e.g. Laptops"
             className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm
                        focus:outline-none focus:ring-2 focus:ring-emerald-500"
           />
@@ -63,7 +63,7 @@ export default function CategoryFormModal({
             required
             value={type}
             onChange={(e) => setType(e.target.value)}
-            placeholder="e.g. Plumbing"
+            placeholder="e.g. HP Laptops"
             className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm
                        focus:outline-none focus:ring-2 focus:ring-emerald-500"
           />
@@ -71,7 +71,7 @@ export default function CategoryFormModal({
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-emerald-600 text-white py-2.5 rounded-lg text-sm font-medium
+          className="w-full cursor-pointer bg-emerald-600 text-white py-2.5 rounded-lg text-sm font-medium
                      hover:bg-emerald-700 transition-colors disabled:opacity-60"
         >
           {loading ? 'Saving...' : 'Add Category'}

@@ -172,7 +172,7 @@ function RegisterForm() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer"
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
@@ -220,7 +220,7 @@ function RegisterForm() {
           <select
             value={plan}
             onChange={(e) => setPlan(e.target.value)}
-            className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg
+            className="w-full cursor-pointer px-3.5 py-2.5 border border-gray-300 rounded-lg
                        text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
           >
             {plans.map((p) => (
@@ -263,7 +263,7 @@ function RegisterForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl
+          className="w-full cursor-pointer bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl
                      text-sm font-semibold transition-colors disabled:opacity-60 mt-2"
         >
           {loading ? 'Creating account...' : 'Create account'}

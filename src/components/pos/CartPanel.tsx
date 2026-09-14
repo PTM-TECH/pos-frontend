@@ -83,7 +83,7 @@ export default function CartPanel() {
               <div className="flex items-center gap-1.5 shrink-0 relative">
                 <button
                   onClick={() => decrementItem(item.product_id)}
-                  className="w-6 h-6 rounded-md border border-gray-200 flex items-center justify-center
+                  className="w-6 h-6 cursor-pointer rounded-md border border-gray-200 flex items-center justify-center
                              hover:bg-gray-50 text-gray-600"
                 >
                   <Minus className="w-3 h-3" />
@@ -116,7 +116,7 @@ export default function CartPanel() {
                       setEditValue(String(item.quantity));
                       setShowKeypadFor(item.product_id);
                     }}
-                    className="text-sm font-medium w-8 text-center hover:bg-gray-50 rounded-md py-0.5"
+                    className="text-sm cursor-pointer font-medium w-8 text-center hover:bg-gray-50 rounded-md py-0.5"
                     title="Click to type quantity, double-click for keypad"
                   >
                     {item.quantity}
@@ -126,7 +126,7 @@ export default function CartPanel() {
                 <button
                   onClick={() => incrementItem(item.product_id)}
                   disabled={item.quantity >= item.available_stock}
-                  className="w-6 h-6 rounded-md border border-gray-200 flex items-center justify-center
+                  className="w-6 h-6 cursor-pointer rounded-md border border-gray-200 flex items-center justify-center
                              hover:bg-gray-50 text-gray-600 disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   <Plus className="w-3 h-3" />
@@ -145,7 +145,7 @@ export default function CartPanel() {
                     <div className="flex gap-2 mt-2">
                       <button
                         onClick={() => setShowKeypadFor(null)}
-                        className="flex-1 text-xs py-2 rounded-lg border border-gray-200 text-gray-600 bg-white"
+                        className="flex-1 text-xs py-2 rounded-lg cursor-pointer border border-gray-200 text-gray-600 bg-white"
                       >
                         Cancel
                       </button>
@@ -154,7 +154,7 @@ export default function CartPanel() {
                           commitEdit(item.product_id);
                           setShowKeypadFor(null);
                         }}
-                        className="flex-1 text-xs py-2 rounded-lg bg-emerald-600 text-white"
+                        className="flex-1 text-xs cursor-pointer py-2 rounded-lg bg-emerald-600 text-white"
                       >
                         Apply
                       </button>
@@ -192,7 +192,7 @@ export default function CartPanel() {
                       setEditingPriceId(item.product_id);
                       setEditPriceValue(String(item.selling_price));
                     }}
-                    className={`text-sm font-semibold w-full text-right hover:bg-gray-50 rounded-md py-0.5 px-1
+                    className={`text-sm cursor-pointer font-semibold w-full text-right hover:bg-gray-50 rounded-md py-0.5 px-1
                       ${item.selling_price < item.unit_price ? "text-emerald-600" : "text-gray-900"}`}
                     title="Click to offer a discount"
                   >
@@ -203,7 +203,7 @@ export default function CartPanel() {
 
               <button
                 onClick={() => removeItem(item.product_id)}
-                className="text-gray-300 hover:text-red-500 shrink-0"
+                className="text-gray-300 hover:text-red-500 shrink-0 cursor-pointer"
               >
                 <Trash2 className="w-4 h-4" />
               </button>
@@ -214,7 +214,6 @@ export default function CartPanel() {
 
       {items.length > 0 && (
         <div className="border-t border-gray-100 px-5 py-4 space-y-3">
-          
           {totalDiscount > 0 && (
             <div className="flex items-center justify-between text-sm">
               <span className="text-emerald-600">Discount applied</span>

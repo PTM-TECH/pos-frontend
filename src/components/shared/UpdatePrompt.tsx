@@ -26,7 +26,7 @@ export default function UpdatePrompt() {
                       window.location.reload()
                       toast.dismiss(t.id)
                     }}
-                    className="text-xs font-semibold text-emerald-600 underline"
+                    className="text-xs font-semibold text-emerald-600 underline cursor-pointer"
                   >
                     Refresh
                   </button>
