@@ -1,7 +1,14 @@
-
-import { Package, Pencil, Trash2, SlidersHorizontal, Power, PowerOff, PackagePlus } from 'lucide-react'
-import { Product } from '@/types'
-import { formatCurrency, getStatusColor, getStatusLabel } from '@/lib/utils'
+import {
+  Package,
+  Pencil,
+  Trash2,
+  SlidersHorizontal,
+  Power,
+  PowerOff,
+  PackagePlus,
+} from "lucide-react";
+import { Product } from "@/types";
+import { formatCurrency, getStatusColor, getStatusLabel } from "@/lib/utils";
 
 export default function ProductCard({
   product,
@@ -11,16 +18,18 @@ export default function ProductCard({
   onAddStock,
   onToggleActive,
 }: {
-  product: Product
-  onEdit: () => void
-  onDelete: () => void
-  onAdjustStock: () => void
-  onAddStock: () => void
-  onToggleActive: () => void
+  product: Product;
+  onEdit: () => void;
+  onDelete: () => void;
+  onAdjustStock: () => void;
+  onAddStock: () => void;
+  onToggleActive: () => void;
 }) {
   return (
-    <div className={`bg-white rounded-xl border p-5 flex items-center gap-4
-      ${product.is_active ? 'border-gray-200' : 'border-gray-200 opacity-60'}`}>
+    <div
+      className={`bg-white rounded-xl border p-5 flex items-center gap-4
+      ${product.is_active ? "border-gray-200" : "border-gray-200 opacity-60"}`}
+    >
       <div className="w-16 h-16 rounded-lg bg-gray-100 flex items-center justify-center shrink-0">
         {product.image ? (
           <img
@@ -45,7 +54,7 @@ export default function ProductCard({
           )}
           <span
             className={`text-[10px] font-medium px-1.5 py-0.5 rounded border shrink-0 ${getStatusColor(
-              product.status
+              product.status,
             )}`}
           >
             {getStatusLabel(product.status)}
@@ -60,7 +69,7 @@ export default function ProductCard({
           {product.code && <span>Code: {product.code}</span>}
           <span>{formatCurrency(product.unit_price)}</span>
           <span>
-            {product.quantity} {product.unit ?? 'units'}
+            {product.quantity} {product.unit ?? "units"}
           </span>
           {product.category && <span>{product.category}</span>}
         </div>
@@ -70,14 +79,15 @@ export default function ProductCard({
         <button
           onClick={onEdit}
           className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center
-                     text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+                     text-blue-500 hover:bg-blue-50 hover:text-blue-700 cursor-pointer transition-colors"
+          title="Edit Product"
         >
           <Pencil className="w-3.5 h-3.5" />
         </button>
-                <button
+        <button
           onClick={onAdjustStock}
           className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center
-                     text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+                     text-amber-500 hover:bg-amber-50 hover:text-amber-700 cursor-pointer transition-colors"
           title="Adjust stock"
         >
           <SlidersHorizontal className="w-3.5 h-3.5" />
@@ -85,7 +95,7 @@ export default function ProductCard({
         <button
           onClick={onAddStock}
           className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center
-                     text-gray-500 hover:bg-emerald-50 hover:text-emerald-600"
+                     text-emerald-500 hover:bg-emerald-50 hover:text-emerald-700 cursor-pointer transition-colors"
           title="Add stock"
         >
           <PackagePlus className="w-3.5 h-3.5" />
@@ -93,19 +103,23 @@ export default function ProductCard({
         <button
           onClick={onToggleActive}
           className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center
-                     text-gray-500 hover:bg-amber-50 hover:text-amber-600"
-          title={product.is_active ? 'Deactivate' : 'Activate'}
+                     text-purple-500 hover:bg-purple-50 hover:text-purple-700 cursor-pointer transition-colors"
+          title={product.is_active ? "Deactivate" : "Activate"}
         >
-          {product.is_active ? <PowerOff className="w-3.5 h-3.5" /> : <Power className="w-3.5 h-3.5" />}
+          {product.is_active ? (
+            <PowerOff className="w-3.5 h-3.5" />
+          ) : (
+            <Power className="w-3.5 h-3.5" />
+          )}
         </button>
         <button
           onClick={onDelete}
           className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center
-                     text-gray-500 hover:bg-red-50 hover:text-red-600"
+                     text-red-500 hover:bg-red-50 hover:text-red-700 cursor-pointer transition-colors"
         >
           <Trash2 className="w-3.5 h-3.5" />
         </button>
       </div>
     </div>
-  )
+  );
 }
