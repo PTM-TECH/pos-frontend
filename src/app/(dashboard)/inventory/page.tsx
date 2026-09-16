@@ -13,6 +13,8 @@ import {
   XCircle,
   ChevronLeft,
   ChevronRight,
+  Wallet,
+  TrendingUp,
 } from "lucide-react";
 import Topbar from "@/components/shared/Topbar";
 import ProductCard from "@/components/dashboard/ProductCard";
@@ -27,9 +29,11 @@ import {
   deleteProduct,
   getCategories,
   setProductActiveStatus,
+  getInventoryValue,
+  InventoryValue,
 } from "@/lib/inventory";
 import { Product, Category } from "@/types";
-import { getErrorMessage } from "@/lib/utils";
+import { getErrorMessage, formatCurrency } from "@/lib/utils";
 import { useAuthStore } from "@/store/authStore";
 import { useEffectiveStoreId } from "@/lib/useEffectiveStoreId";
 import toast from "react-hot-toast";
@@ -58,6 +62,9 @@ export default function InventoryPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const PAGE_SIZE = 10;
   const [showInactive, setShowInactive] = useState(false);
+  const [inventoryValue, setInventoryValue] = useState<InventoryValue | null>(
+    null,
+  );
   const [deleteTarget, setDeleteTarget] = useState<Product | null>(null);
   const [deleting, setDeleting] = useState(false);
 
@@ -70,6 +77,12 @@ export default function InventoryPage() {
       ]);
       setProducts(productsData);
       setCategories(categoriesData);
+
+      const selectedCategory = categoriesData.find(
+        (c) => c.name === categoryFilter,
+      );
+      const value = await getInventoryValue(storeId, selectedCategory?.id);
+      setInventoryValue(value);
     } catch {
       toast.error("Failed to load inventory");
     } finally {
@@ -79,7 +92,7 @@ export default function InventoryPage() {
 
   useEffect(() => {
     loadData();
-  }, [storeId, showInactive]);
+  }, [storeId, showInactive, categoryFilter]);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -157,7 +170,7 @@ export default function InventoryPage() {
       <Topbar title="Inventory" />
 
       <div className="p-6 space-y-5">
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-5 gap-4">
           <StatCard
             label="Total Products"
             value={totalInCategory}
@@ -178,6 +191,22 @@ export default function InventoryPage() {
             icon={XCircle}
             iconColor="#ef4444"
             iconBg="#fef2f2"
+          />
+          <StatCard
+            label="Inventory Value (Cost)"
+            value={formatCurrency(inventoryValue?.inventory_value_cost ?? 0)}
+            isCurrency
+            icon={Wallet}
+            iconColor="#6366f1"
+            iconBg="#eef2ff"
+          />
+          <StatCard
+            label="Potential Revenue"
+            value={formatCurrency(inventoryValue?.inventory_value_revenue ?? 0)}
+            isCurrency
+            icon={TrendingUp}
+            iconColor="#10b981"
+            iconBg="#ecfdf5"
           />
         </div>
         <div className="flex items-center justify-between gap-3">
